@@ -971,16 +971,20 @@ nav.site-nav {
 
 .category-content strong {
     font-family: var(--font-heading);
-    font-size: 1.08rem;
-    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
     display: block;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.45rem;
+    letter-spacing: -0.2px;
 }
 
 .category-content p {
-    font-size: 0.88rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
+    font-size: 1.02rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-weight: 450;
+    margin: 0;
 }
 
 /* Variaciones cromáticas avanzadas con nth-child */

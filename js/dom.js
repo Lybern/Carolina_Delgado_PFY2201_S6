@@ -516,4 +516,42 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // 7. Eventos mouseover y mouseout para realce visual dinámico
+  const tarjetasCategorias = document.querySelectorAll(".category-card");
+  tarjetasCategorias.forEach((tarjeta) => {
+    tarjeta.addEventListener("mouseover", () => {
+      tarjeta.style.transform = "translateX(8px) scale(1.01)";
+      tarjeta.style.boxShadow = "0 6px 20px rgba(0, 240, 255, 0.25)";
+    });
+    tarjeta.addEventListener("mouseout", () => {
+      tarjeta.style.transform = "";
+      tarjeta.style.boxShadow = "";
+    });
+  });
+
+  // Microinteracción mouseover / mouseout en el texto orientador del catálogo
+  const leadInfo = document.getElementById("lead_info");
+  if (leadInfo) {
+    leadInfo.addEventListener("mouseover", () => {
+      leadInfo.style.color = "#ffffff";
+      leadInfo.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.5)";
+    });
+    leadInfo.addEventListener("mouseout", () => {
+      leadInfo.style.color = "";
+      leadInfo.style.textShadow = "";
+    });
+  }
 });
+
+/**
+ * Función para restablecer estilos en línea masivamente.
+ * Recorre los párrafos y remueve estilos inline para devolver el control a la hoja CSS.
+ */
+function reestablecerColores() {
+  const parrafos = document.querySelectorAll("p");
+  parrafos.forEach((p) => {
+    p.style.color = "";
+  });
+}
+
