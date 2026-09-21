@@ -1,13 +1,13 @@
 /**
  * ==============================================================================
  * ARCHIVO: js/contacto.js
- * ASIGNATURA: Desarrollo Frontend I (PFY2201) - Semana 6
- * ALUMNA: Carolina Delgado
+ * PROYECTO: EriGamesStore - Formulario de Contacto
+ * DESARROLLADO POR: Carolina Delgado
  * DESCRIPCIÓN: Módulo de validación interactiva del formulario de contacto.
- *              Implementa las directrices de clase: validación en tiempo real
- *              (input / change), control de longitud máxima, prevención de envío
- *              (preventDefault) y retroalimentación mediante clases nativas
- *              de Bootstrap 5 (is-valid, is-invalid, invalid-feedback) sin alerts.
+ *              Implementa validación en tiempo real (input / change),
+ *              control de longitud máxima, prevención de envío (preventDefault)
+ *              y retroalimentación mediante clases nativas de Bootstrap 5
+ *              (is-valid, is-invalid, invalid-feedback) sin interrupciones.
  * ==============================================================================
  */
 

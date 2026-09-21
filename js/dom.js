@@ -1,8 +1,8 @@
 /**
  * ==============================================================================
  * ARCHIVO: js/dom.js
- * ASIGNATURA: Desarrollo Frontend I (PFY2201) - Semana 6
- * ALUMNA: Carolina Delgado
+ * PROYECTO: EriGamesStore - Catálogo de Videojuegos Online
+ * DESARROLLADO POR: Carolina Delgado
  * DESCRIPCIÓN: Módulo responsable de la carga asíncrona mediante Fetch API,
  *              la construcción y manipulación dinámica del DOM en el catálogo
  *              de videojuegos, gestión de eventos de búsqueda y filtros, y

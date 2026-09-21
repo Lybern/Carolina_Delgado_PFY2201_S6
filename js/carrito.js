@@ -1,12 +1,12 @@
 /**
  * ==============================================================================
  * ARCHIVO: js/carrito.js
- * ASIGNATURA: Desarrollo Frontend I (PFY2201) - Semana 6
- * ALUMNA: Carolina Delgado
+ * PROYECTO: EriGamesStore - Carrito de Compras Online
+ * DESARROLLADO POR: Carolina Delgado
  * DESCRIPCIÓN: Módulo encargado de la gestión del carrito de compras.
  *              Implementa persistencia en LocalStorage, cálculo de totales,
- *              manipulación reactiva del DOM (en panel Offcanvas y en el área
- *              designada de la página), confirmación de eliminación y Toasts.
+ *              manipulación reactiva del DOM (en panel Offcanvas y en la sección
+ *              de compras de la página), confirmación de eliminación y Toasts.
  * ==============================================================================
  */
 

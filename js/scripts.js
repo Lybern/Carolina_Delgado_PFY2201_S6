@@ -1,8 +1,8 @@
 /**
  * ==============================================================================
  * ERIGAMESSTORE - LÓGICA DE JAVASCRIPT MODULAR (ES6+)
- * Asignatura: Desarrollo Frontend I (PFY2201)
- * Estudiante: Carolina Delgado | Duoc UC
+ * Tienda Oficial de Videojuegos y Accesorios Gamer
+ * Desarrollado por: Carolina Delgado
  * ==============================================================================
  */
 
