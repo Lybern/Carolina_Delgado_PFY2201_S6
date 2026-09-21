@@ -21,22 +21,7 @@
 
 ---
 
-## 📋 Matriz de Cumplimiento de la Pauta de Evaluación Sumativa
-
-| N° | Criterio de la Pauta | Nivel Logrado | Implementación Técnica en EriGamesStore |
-|:--:|:---------------------|:-------------:|:----------------------------------------|
-| **1** | **Implementación de Bootstrap 5 y Responsividad (15 pts)** | **100% (CL)** | Maquetación responsiva con contenedor fluido, rejilla Bootstrap 5 (`container`, `row`, `col`), componentes avanzados (`Navbar`, `Carousel`, `Offcanvas`, `Toast`, `Badge`) y diseño Dark Gamer adaptado a móviles sin scroll horizontal. |
-| **2** | **Barra de Navegación Funcional Multidispositivo (15 pts)** | **100% (CL)** | Barra `sticky-top` con menú colapsable (`navbar-toggler`), menú desplegable con 5 categorías simuladas, buscador, botón de carrito con contador reactivo e isotipo minimalista **EGS** con la mascota oficial. |
-| **3** | **Manipulación Dinámica del DOM (15 pts)** | **100% (CL)** | Creación y ensamblaje seguro de elementos con `document.createElement()` y `appendChild()`. Inyección dinámica del catálogo y actualización en tiempo real del panel Offcanvas y tabla designada en la página. |
-| **4** | **Gestión de Eventos Interactivos (15 pts)** | **100% (CL)** | Implementación de eventos `click` (añadir al carrito, modificar cantidades `+`/`-`, eliminar ítem y vaciar carrito) y `submit` (búsqueda en tiempo real con `preventDefault()` y validación del formulario de contacto). Microinteracciones con `mouseover` y `mouseout`. |
-| **5** | **Uso de la Fetch API para Carga Externa (10 pts)** | **100% (CL)** | Carga asíncrona mediante `async / await` desde `data/productos.json`. Construcción automática de tarjetas con precios en CLP e insignias de disponibilidad. |
-| **6** | **Gestión Básica y Amigable de Errores (10 pts)** | **100% (CL)** | Control estructurado con bloque `try...catch`. Ante fallos de conexión o red, se activa un catálogo de respaldo local y se despliega una notificación amigable y no invasiva vía Toast de Bootstrap. |
-| **7** | **Modularidad y Buenas Prácticas de Código (10 pts)** | **100% (CL)** | Código JavaScript modularizado en funciones reutilizables distribuidas por responsabilidad en `assets/js/` (`dom.js`, `carrito.js`, `contacto.js`), documentadas con JSDoc y comentarios técnicos limpios. |
-| **8** | **Publicación en GitHub y Despliegue en gh-pages (10 pts)** | **100% (CL)** | Repositorio público organizado según el estándar requerido (`assets/`), con rama `gh-pages` desplegada y operativa, y documentación completa en este README. |
-
----
-
-## 🚀 Arquitectura y Características del Sistema
+##  Arquitectura y Características del Sistema
 
 ### 1. Carga Asíncrona con Fetch API y Resiliencia
 - **Consumo de Datos Locales:** La función `cargarProductos()` en `assets/js/dom.js` invoca asíncronamente `data/productos.json`.
