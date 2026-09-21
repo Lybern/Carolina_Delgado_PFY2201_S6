@@ -54,10 +54,13 @@
          ========================================================================== -->
     <nav class="navbar navbar-expand-lg navbar-dark site-nav sticky-top" aria-label="Navegación principal">
         <div class="container nav-container">
-            <!-- Logotipo y Nombre de Marca -->
-            <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" href="#inicio">
-                <img src="img/erigames-logo.jpg" alt="Logotipo de EriGamesStore" width="36" height="36" class="rounded-circle" style="border: 1px solid var(--accent-cyan);">
-                <span style="color: #ffffff; font-weight: 800; font-family: var(--font-heading); font-size: 1.15rem;">EriGamesStore</span>
+            <!-- Isotipo Gamer Exclusivo para Barra de Navegación (evita redundancia con el header) -->
+            <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none nav-brand-compact" href="#inicio" title="Volver al inicio - EriGamesStore">
+                <img src="img/egs-nav-logo.svg" alt="Isotipo EGS" width="36" height="36" class="nav-brand-img">
+                <div class="d-flex flex-column lh-1">
+                    <span class="nav-brand-title">EGS<span style="color: var(--accent-cyan);">.</span></span>
+                    <span class="nav-brand-subtitle">STORE</span>
+                </div>
             </a>
 
             <!-- Contenedor móvil con botón de carrito y toggler -->

@@ -316,6 +316,49 @@ nav.site-nav {
     padding: 0.65rem 1.5rem;
 }
 
+/* Marca compacta / Isotipo exclusivo para barra de navegación */
+.nav-brand-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+    transition: transform var(--transition-fast), filter var(--transition-fast);
+}
+
+.nav-brand-compact:hover {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.45));
+}
+
+.nav-brand-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    transition: transform var(--transition-fast);
+}
+
+.nav-brand-compact:hover .nav-brand-img {
+    transform: scale(1.08) rotate(-4deg);
+}
+
+.nav-brand-title {
+    color: #ffffff;
+    font-weight: 900;
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    letter-spacing: 0.8px;
+    line-height: 1;
+}
+
+.nav-brand-subtitle {
+    color: var(--accent-cyan);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
 .nav-list {
     list-style: none;
     display: flex;
