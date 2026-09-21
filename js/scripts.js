@@ -324,8 +324,37 @@ function configurarEventoSubmitFormulario() {
   });
 }
 
-// Punto de entrada seguro
+// ==============================================================================
+// PASO 7: TEMPORIZADORES ASINCRÓNICOS (setTimeout Y reestablecerColores)
+// ==============================================================================
+
+/**
+ * Restablece los estilos aplicados dinámicamente eliminando propiedades en línea.
+ * Vuelve al diseño establecido originalmente en la hoja de estilos CSS.
+ */
+function reestablecerColores() {
+  const enlacesMenu = document.querySelectorAll(".nav-link");
+  enlacesMenu.forEach((el) => {
+    el.style.color = "";
+    el.style.removeProperty("color");
+  });
+}
+
+// ==============================================================================
+// PUNTO DE ENTRADA SEGURO (DOMContentLoaded)
+// ==============================================================================
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("El DOM está listo para ser manipulado con total seguridad.");
+
+  // PASO 7: Demostración de temporizador vista en clase
+  // Resalta los enlaces del menú con color cyan neón al cargar y los restaura tras 3 segundos (3000 ms)
+  const enlacesMenu = document.querySelectorAll(".nav-link");
+  enlacesMenu.forEach((el) => {
+    el.style.setProperty("color", "#00f0ff", "important"); // Cyan neón gamer
+  });
+  setTimeout(reestablecerColores, 3000);
+
+  // Inicialización de funciones y eventos de la aplicación
   cargarProductos();
   configurarEventoOfertas();
   configurarEventosMouseMenu();
