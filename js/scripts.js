@@ -107,6 +107,22 @@ function crearTarjetaProducto(prod) {
   botonComprar.classList.add("btn-buy");
   botonComprar.textContent = "🛒 Añadir al Carrito";
 
+  // PASO 5: Microinteracción visual con evento click y temporizador setTimeout
+  botonComprar.addEventListener("click", () => {
+    const textoPrevio = botonComprar.textContent;
+    botonComprar.textContent = "✅ ¡Añadido!";
+    botonComprar.style.backgroundColor = "var(--accent-green)";
+    botonComprar.style.borderColor = "var(--accent-green)";
+    botonComprar.style.color = "#ffffff";
+
+    setTimeout(() => {
+      botonComprar.textContent = textoPrevio;
+      botonComprar.style.backgroundColor = "";
+      botonComprar.style.borderColor = "";
+      botonComprar.style.color = "";
+    }, 1500);
+  });
+
   // 4. Ensamblaje con appendChild
   cuerpo.appendChild(titulo);
   cuerpo.appendChild(genero);
