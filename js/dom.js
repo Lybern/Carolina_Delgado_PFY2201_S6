@@ -151,7 +151,7 @@ function mostrarToast(mensaje, tipo = "info") {
   mensajeEl.textContent = mensaje;
 
   if (typeof bootstrap !== "undefined" && bootstrap.Toast) {
-    const bsToast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 3500 });
+    const bsToast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2500 });
     bsToast.show();
   }
 }
