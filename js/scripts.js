@@ -7,32 +7,118 @@
  */
 
 // ==============================================================================
-// 1. ESTADO GLOBAL DE LA APLICACIÓN
+// 1. ESTADO GLOBAL Y CATÁLOGO DE RESPALDO (FALLBACK EN MEMORIA)
 // ==============================================================================
 
 /**
- * Catálogo general de videojuegos obtenidos asincrónicamente.
+ * Catálogo general de videojuegos en memoria (evita bloqueo por CORS al abrir vía file://).
+ * @constant {Array<Object>}
+ */
+const PRODUCTOS_DEFAULT = [
+  {
+    id: "prod-1",
+    nombre: "The Legend of Zelda: Tears of the Kingdom",
+    categoria: "Aventura y Acción",
+    precio: 54990,
+    descripcion: "Acompaña a Link en una épica travesía por los cielos y las profundidades de Hyrule.",
+    badge: "Destacado",
+    badgeClase: "badge-featured",
+    plataforma: "Nintendo Switch",
+    imagen: {
+      src: "img/zelda-totk.jpg",
+      alt: "Portada de The Legend of Zelda: Tears of the Kingdom"
+    }
+  },
+  {
+    id: "prod-2",
+    nombre: "Cyberpunk 2077: Phantom Liberty",
+    categoria: "Rol (RPG)",
+    precio: 39990,
+    descripcion: "Thriller de espionaje, tecnología y acción en el peligroso distrito de Dogtown.",
+    badge: "Oferta",
+    badgeClase: "badge-special",
+    plataforma: "PS5 / Xbox / PC",
+    imagen: {
+      src: "img/cyberpunk-2077.jpg",
+      alt: "Portada de Cyberpunk 2077: Phantom Liberty"
+    }
+  },
+  {
+    id: "prod-3",
+    nombre: "Super Mario Bros. Wonder",
+    categoria: "Plataformas",
+    precio: 49990,
+    descripcion: "Aventura 2D innovadora con efectos Maravilla que transforman los escenarios.",
+    badge: "Popular",
+    badgeClase: "badge-popular",
+    plataforma: "Nintendo Switch",
+    imagen: {
+      src: "img/mario-wonder.jpg",
+      alt: "Portada de Super Mario Bros. Wonder"
+    }
+  },
+  {
+    id: "prod-4",
+    nombre: "EA Sports FC 24",
+    categoria: "Deportes",
+    precio: 42990,
+    descripcion: "Simulación de fútbol con tecnología HyperMotionV y estilos de juego realistas.",
+    badge: "Nuevo",
+    badgeClase: "badge-new",
+    plataforma: "Multiplataforma",
+    imagen: {
+      src: "img/fc24.jpg",
+      alt: "Portada de EA Sports FC 24"
+    }
+  },
+  {
+    id: "prod-5",
+    nombre: "Resident Evil 4 Remake",
+    categoria: "Survival Horror",
+    precio: 44990,
+    descripcion: "Remake magistral del clásico de supervivencia con gráficos ultrarrealistas.",
+    badge: "Imperdible",
+    badgeClase: "badge-horror",
+    plataforma: "PS5 / Xbox / PC",
+    imagen: {
+      src: "img/resident-evil-4.jpg",
+      alt: "Portada de Resident Evil 4 Remake"
+    }
+  },
+  {
+    id: "prod-6",
+    nombre: "Final Fantasy VII Rebirth",
+    categoria: "Rol (RPG)",
+    precio: 59990,
+    descripcion: "La aventura de Cloud y sus aliados continúa por un mundo expansivo e inexplorado.",
+    badge: "Exclusivo",
+    badgeClase: "badge-goty",
+    plataforma: "PlayStation 5",
+    imagen: {
+      src: "img/ffvii-rebirth.jpg",
+      alt: "Portada de Final Fantasy VII Rebirth"
+    }
+  }
+];
+
+/**
+ * Catálogo de productos activo.
  * @type {Array<Object>}
  */
 let productosCatalogo = [];
 
 /**
- * Contador de reintentos para la solicitud asíncrona de datos.
- * @type {number}
+ * Estado del carrito de compras cargado desde LocalStorage.
+ * @type {Array<Object>}
  */
-let intentosCarga = 0;
+let carritoCompras = [];
 
 /**
- * Límite máximo de reintentos permitidos para la solicitud Fetch.
- * @constant {number}
+ * Constantes de configuración de solicitudes asíncronas.
  */
+const TIMEOUT_FETCH_MS = 6000;
 const MAX_INTENTOS_FETCH = 3;
-
-/**
- * Tiempo límite en milisegundos para abortar solicitudes lentas.
- * @constant {number}
- */
-const TIMEOUT_FETCH_MS = 7000;
+let intentosCarga = 0;
 
 // ==============================================================================
 // 2. UTILIDADES Y FUNCIONES REUTILIZABLES (HELPERS)
@@ -40,81 +126,92 @@ const TIMEOUT_FETCH_MS = 7000;
 
 /**
  * Formatea un valor numérico a moneda local chilena (CLP).
- * Centraliza la presentación uniforme de precios en toda la interfaz.
- * 
- * @param {number|string} precio - Monto numérico a formatear.
+ * @param {number|string} monto
  * @returns {string} Cadena formateada (ej: "$54.990 CLP").
  */
-function formatearPrecioCLP(precio) {
-  return `$${Number(precio).toLocaleString("es-CL")} CLP`;
+function formatearPrecioCLP(monto) {
+  return `$${Number(monto).toLocaleString("es-CL")} CLP`;
 }
 
 /**
- * Genera un nodo de insignia (badge) configurado de manera programática y segura.
- * 
- * @param {string} texto - Contenido textual de la insignia.
- * @param {string} claseColor - Clase CSS contextual para el diseño visual.
- * @returns {HTMLSpanElement} Elemento <span> ensamblado.
+ * Crea un nodo badge con estilo gamer.
+ * @param {string} texto
+ * @param {string} claseColor
+ * @returns {HTMLSpanElement}
  */
 function crearBadge(texto, claseColor = "badge-featured") {
   const badge = document.createElement("span");
-  badge.classList.add("badge", claseColor);
-  badge.textContent = texto; // Protección anti-XSS
+  badge.className = `badge ${claseColor}`;
+  badge.textContent = texto;
   return badge;
 }
 
 /**
- * Crea un elemento HTML con asignación de contenido textual y clases CSS en un solo paso.
- * 
- * @param {string} etiqueta - Nombre de la etiqueta HTML (ej: 'h3', 'p', 'span').
- * @param {string} [texto=""] - Contenido textual asignado mediante textContent.
- * @param {...string} clases - Clases CSS aplicadas al elemento.
- * @returns {HTMLElement} Elemento DOM configurado.
+ * Crea un elemento DOM con texto seguro mediante textContent (protección XSS).
+ * @param {string} etiqueta
+ * @param {string} texto
+ * @param {...string} clases
+ * @returns {HTMLElement}
  */
 function crearNodoTexto(etiqueta, texto = "", ...clases) {
-  const nodo = document.createElement(etiqueta);
-  if (texto) {
-    nodo.textContent = texto;
-  }
-  if (clases.length > 0) {
-    nodo.classList.add(...clases);
-  }
-  return nodo;
+  const el = document.createElement(etiqueta);
+  if (texto) el.textContent = texto;
+  if (clases.length > 0) el.classList.add(...clases);
+  return el;
 }
 
 // ==============================================================================
-// 3. MANIPULACIÓN DINÁMICA DEL DOM (createElement y appendChild)
+// 3. CONSTRUCCIÓN MODULAR DEL DOM (TARJETAS GAMER ORIGINALES)
 // ==============================================================================
 
 /**
- * Construye de forma modular la tarjeta de un videojuego en el DOM.
- * Utiliza utilidades centralizadas y asegura la protección de datos con textContent.
- * 
- * @param {Object} prod - Datos del videojuego desde el archivo JSON.
- * @returns {HTMLElement} Elemento <article> ensamblado.
+ * Construye de forma dinámica la tarjeta de un videojuego en la cuadrícula gamer.
+ * @param {Object} prod - Datos del videojuego.
+ * @returns {HTMLElement} Nodo <article> ensamblado.
  */
 function crearTarjetaProducto(prod) {
   const articulo = document.createElement("article");
   articulo.classList.add("product-card");
 
-  // 1. Contenedor multimedia <div class="card-media">
+  // 1. Contenedor multimedia (.card-media)
   const media = document.createElement("div");
   media.classList.add("card-media");
 
-  const badgePromo = crearBadge(prod.badge || "Destacado", "badge-featured");
-  const badgePlataforma = crearBadge(prod.plataforma || "Multiplataforma", "platform-tag");
+  let claseInsignia = prod.badgeClase || "badge-featured";
+  if (!prod.badgeClase && prod.badgeColor) {
+    const mapa = {
+      primary: "badge-goty",
+      danger: "badge-special",
+      warning: "badge-featured",
+      success: "badge-new",
+      dark: "badge-horror",
+      info: "badge-popular"
+    };
+    claseInsignia = mapa[prod.badgeColor] || "badge-featured";
+  }
+
+  const badgePromo = crearBadge(prod.badge || "Destacado", claseInsignia);
 
   const img = document.createElement("img");
   img.src = prod.imagen.src;
   img.alt = prod.imagen.alt || `Portada de ${prod.nombre}`;
   img.classList.add("product-img");
   img.setAttribute("loading", "lazy");
+  img.onerror = function() {
+    if (this.src.includes("/img/") && !this.src.includes("/assets/img/")) {
+      this.src = this.src.replace("/img/", "/assets/img/");
+    }
+  };
+
+  const badgePlat = document.createElement("span");
+  badgePlat.classList.add("platform-tag");
+  badgePlat.textContent = prod.plataforma || "Multiplataforma";
 
   media.appendChild(badgePromo);
   media.appendChild(img);
-  media.appendChild(badgePlataforma);
+  media.appendChild(badgePlat);
 
-  // 2. Cuerpo de la tarjeta <div class="product-body">
+  // 2. Cuerpo de la tarjeta (.product-body)
   const cuerpo = document.createElement("div");
   cuerpo.classList.add("product-body");
 
@@ -128,7 +225,7 @@ function crearTarjetaProducto(prod) {
 
   const descripcion = crearNodoTexto("p", prod.descripcion, "product-desc");
 
-  // Caja de precio y stock
+  // Caja de precio y disponibilidad (.product-price-box)
   const priceBox = document.createElement("div");
   priceBox.classList.add("product-price-box");
 
@@ -146,25 +243,26 @@ function crearTarjetaProducto(prod) {
   priceBox.appendChild(priceData);
   priceBox.appendChild(stockBadge);
 
-  // Botón de acción con microinteracción visual
+  // Botón de compra interactivo (.btn-buy)
   const botonComprar = document.createElement("button");
   botonComprar.type = "button";
   botonComprar.classList.add("btn-buy");
   botonComprar.textContent = "🛒 Añadir al Carrito";
 
+  // Microinteracción al hacer clic y agregado al carrito
   botonComprar.addEventListener("click", () => {
+    agregarAlCarrito(prod);
+
     const textoPrevio = botonComprar.textContent;
     botonComprar.textContent = "✅ ¡Añadido!";
     botonComprar.style.backgroundColor = "var(--accent-green)";
     botonComprar.style.borderColor = "var(--accent-green)";
-    botonComprar.style.color = "#ffffff";
 
     setTimeout(() => {
       botonComprar.textContent = textoPrevio;
       botonComprar.style.backgroundColor = "";
       botonComprar.style.borderColor = "";
-      botonComprar.style.color = "";
-    }, 1500);
+    }, 1200);
   });
 
   // Ensamblaje ordenado con appendChild
@@ -181,14 +279,26 @@ function crearTarjetaProducto(prod) {
 }
 
 /**
- * Renderiza el conjunto de videojuegos en el contenedor principal del DOM.
- * @param {Array<Object>} productos - Arreglo de videojuegos a desplegar.
+ * Renderiza el arreglo de productos en la cuadrícula del DOM.
+ * @param {Array<Object>} productos
  */
 function mostrarProductos(productos) {
   const contenedor = document.getElementById("contenedor_productos");
   if (!contenedor) return;
 
   contenedor.innerHTML = "";
+
+  if (productos.length === 0) {
+    contenedor.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
+        <p style="color: var(--text-muted); font-size: 1.1rem;">No se encontraron videojuegos que coincidan con la búsqueda.</p>
+        <button type="button" class="btn" onclick="restablecerFiltros()" style="margin-top: 0.75rem; background: var(--accent-blue); color: #ffffff; padding: 0.5rem 1.2rem; border-radius: var(--radius-sm); border: none; cursor: pointer;">
+          Mostrar todos los juegos
+        </button>
+      </div>
+    `;
+    return;
+  }
 
   productos.forEach((prod) => {
     const tarjeta = crearTarjetaProducto(prod);
@@ -197,20 +307,28 @@ function mostrarProductos(productos) {
 }
 
 // ==============================================================================
-// 4. CONSUMO ASÍNCRONO CON FETCH API (TIMEOUTS Y REINTENTOS CONTROLADOS)
+// 4. CARGA ASÍNCRONA CON FETCH API, ABORTCONTROLLER Y FALLBACK SEGURO
 // ==============================================================================
 
 /**
- * Carga el catálogo de productos con control de tiempo de espera y reintentos limitados.
- * Utiliza AbortController para prevenir solicitudes colgadas y despliega orientación interactiva.
+ * Carga el catálogo de productos con control de tiempo de espera y manejo de errores.
+ * Utiliza async/await con Fetch API, AbortController y respaldo automático para máxima resiliencia.
  */
-function cargarProductos() {
+async function cargarProductos() {
   const contenedor = document.getElementById("contenedor_productos");
   if (!contenedor) return;
 
+  // Si se ejecuta mediante el protocolo file://, utilizar el respaldo en memoria de inmediato
+  if (window.location.protocol === "file:") {
+    console.info("Protocolo local file:// detectado: Cargando catálogo desde memoria local.");
+    productosCatalogo = [...PRODUCTOS_DEFAULT];
+    mostrarProductos(productosCatalogo);
+    return;
+  }
+
   intentosCarga++;
 
-  // Indicador de carga con retroalimentación del intento actual
+  // Indicador visual de carga (Spinner gamer)
   contenedor.innerHTML = `
     <div class="spinner-caja" id="spinner_carga" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
       <div class="spinner-gamer" role="status" aria-label="Cargando catálogo"></div>
@@ -220,246 +338,564 @@ function cargarProductos() {
     </div>
   `;
 
-  // Configuración de AbortController para control de timeout
   const controlador = new AbortController();
-  const temporizadorId = setTimeout(() => {
+  const temporizador = setTimeout(() => {
     controlador.abort();
   }, TIMEOUT_FETCH_MS);
 
-  fetch("data/productos.json", { signal: controlador.signal })
-    .then((respuesta) => {
-      clearTimeout(temporizadorId);
-      if (!respuesta.ok) {
-        throw new Error(`Error HTTP: ${respuesta.status}`);
-      }
-      return respuesta.json();
-    })
-    .then((datos) => {
-      intentosCarga = 0; // Restablecer contador tras éxito
-      productosCatalogo = datos;
-      console.log(`Catálogo cargado exitosamente: ${datos.length} títulos listos.`);
-      mostrarProductos(productosCatalogo);
-    })
-    .catch((error) => {
-      clearTimeout(temporizadorId);
-      console.error("Fallo en la carga de datos:", error);
+  try {
+    const respuesta = await fetch("data/productos.json", { signal: controlador.signal });
+    clearTimeout(temporizador);
 
-      const esTimeout = error.name === "AbortError";
-      const mensajeDetalle = esTimeout
-        ? "El servidor superó el tiempo máximo de espera sin responder."
-        : "No fue posible acceder al archivo de datos 'data/productos.json'.";
+    if (!respuesta.ok) {
+      throw new Error(`Error en respuesta del servidor: ${respuesta.status}`);
+    }
 
-      // Botón interactivo de reintento si no se ha alcanzado el límite
-      const accionReintento = intentosCarga < MAX_INTENTOS_FETCH
-        ? `<button type="button" class="btn btn-primary" onclick="cargarProductos()" style="margin-top: 1rem; font-weight: bold; cursor: pointer; padding: 0.6rem 1.4rem; border-radius: var(--radius-sm); border: none; background: var(--accent-blue); color: #ffffff;">
-             🔄 Reintentar Carga (${intentosCarga}/${MAX_INTENTOS_FETCH})
-           </button>`
-        : `<p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.75rem;">
-             Límite de ${MAX_INTENTOS_FETCH} intentos alcanzado. Inicia un servidor local (Live Server o python -m http.server).
-           </p>`;
+    const datos = await respuesta.json();
+    intentosCarga = 0;
+    productosCatalogo = datos;
+    mostrarProductos(productosCatalogo);
+  } catch (error) {
+    clearTimeout(temporizador);
+    console.warn("Fallo o interrupción en Fetch API. Activando catálogo de respaldo:", error);
 
-      contenedor.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem; background: var(--bg-card); border: 1px solid var(--accent-red); border-radius: var(--radius-md);">
-          <p style="font-size: 2rem; margin-bottom: 0.5rem;">⚠️</p>
-          <h4 style="color: var(--accent-red); margin-bottom: 0.5rem; font-size: 1.25rem;">No se pudo cargar el catálogo</h4>
-          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto; font-size: 0.95rem;">${mensajeDetalle}</p>
-          ${accionReintento}
+    // Activar datos de respaldo para garantizar visualización continua en la interfaz
+    productosCatalogo = [...PRODUCTOS_DEFAULT];
+    mostrarProductos(productosCatalogo);
+  }
+}
+
+// ==============================================================================
+// 5. GESTIÓN DEL CARRITO DE COMPRAS CON LOCALSTORAGE
+// ==============================================================================
+
+/**
+ * Inicializa y carga el carrito desde LocalStorage.
+ */
+function inicializarCarrito() {
+  try {
+    const guardado = localStorage.getItem("erigames_carrito");
+    carritoCompras = guardado ? JSON.parse(guardado) : [];
+  } catch (e) {
+    console.warn("No fue posible acceder a localStorage:", e);
+    carritoCompras = [];
+  }
+  actualizarVistaCarrito();
+}
+
+/**
+ * Guarda el estado actual del carrito en LocalStorage.
+ */
+function guardarCarrito() {
+  try {
+    localStorage.setItem("erigames_carrito", JSON.stringify(carritoCompras));
+  } catch (e) {
+    console.warn("Error al guardar en localStorage:", e);
+  }
+  actualizarVistaCarrito();
+}
+
+/**
+ * Añade un videojuego al carrito o incrementa su cantidad si ya existe.
+ * @param {Object} producto
+ */
+function agregarAlCarrito(producto) {
+  const itemExistente = carritoCompras.find((item) => String(item.id) === String(producto.id));
+
+  if (itemExistente) {
+    itemExistente.cantidad += 1;
+  } else {
+    carritoCompras.push({
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      plataforma: producto.plataforma,
+      imagen: producto.imagen.src,
+      cantidad: 1
+    });
+  }
+
+  guardarCarrito();
+
+  // Animación del badge del carrito
+  const badgeEl = document.getElementById("badge-contador-carrito");
+  if (badgeEl) {
+    badgeEl.classList.remove("badge-pulse");
+    void badgeEl.offsetWidth; // Forzar reflujo para reiniciar animación
+    badgeEl.classList.add("badge-pulse");
+  }
+
+  // Desplegar automáticamente el panel lateral del carrito de Bootstrap
+  const offcanvasEl = document.getElementById("offcanvasCarrito");
+  if (offcanvasEl && typeof bootstrap !== "undefined") {
+    const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+    bsOffcanvas.show();
+  }
+}
+
+/**
+ * Modifica la cantidad de un ítem en el carrito.
+ * @param {string|number} prodId
+ * @param {number} delta - Variación (+1 o -1).
+ */
+function modificarCantidadCarrito(prodId, delta) {
+  const item = carritoCompras.find((i) => String(i.id) === String(prodId));
+  if (!item) return;
+
+  item.cantidad += delta;
+  if (item.cantidad <= 0) {
+    carritoCompras = carritoCompras.filter((i) => String(i.id) !== String(prodId));
+  }
+
+  guardarCarrito();
+}
+
+/**
+ * Elimina un producto del carrito.
+ * @param {string|number} prodId
+ */
+function eliminarDelCarrito(prodId) {
+  carritoCompras = carritoCompras.filter((item) => String(item.id) !== String(prodId));
+  guardarCarrito();
+}
+
+/**
+ * Vacía por completo el carrito de compras.
+ */
+function vaciarCarrito() {
+  if (carritoCompras.length === 0) return;
+  carritoCompras = [];
+  guardarCarrito();
+}
+
+/**
+ * Procesa la finalización de compra y limpia el carrito.
+ */
+function iniciarCheckout() {
+  if (carritoCompras.length === 0) {
+    alert("El carrito está vacío. Añade videojuegos para continuar.");
+    return;
+  }
+  alert("¡Gracias por tu compra en EriGamesStore! Te contactaremos para coordinar el despacho.");
+  vaciarCarrito();
+  const offcanvasEl = document.getElementById("offcanvasCarrito");
+  if (offcanvasEl && typeof bootstrap !== "undefined") {
+    const modal = bootstrap.Offcanvas.getInstance(offcanvasEl);
+    if (modal) modal.hide();
+  }
+}
+
+/**
+ * Actualiza la interfaz visual del carrito (Offcanvas, contador y resumen en página designada).
+ */
+function actualizarVistaCarrito() {
+  const badgeContador = document.getElementById("badge-contador-carrito");
+  const areaResumen = document.getElementById("area-resumen-carrito");
+  const totalEl = document.getElementById("total-carrito");
+
+  // Calcular totales
+  const totalCantidad = carritoCompras.reduce((acc, item) => acc + item.cantidad, 0);
+  const totalPrecio = carritoCompras.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+
+  // Actualizar contador del navbar (escritorio y móvil)
+  document.querySelectorAll(".badge-contador-movil, #badge-contador-carrito").forEach((b) => {
+    b.textContent = totalCantidad;
+  });
+
+  // Actualizar monto total del panel Offcanvas
+  if (totalEl) {
+    totalEl.textContent = formatearPrecioCLP(totalPrecio);
+  }
+
+  // 1. Actualizar lista en el panel lateral Offcanvas
+  if (areaResumen) {
+    if (carritoCompras.length === 0) {
+      areaResumen.innerHTML = `
+        <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🛒</div>
+          <p style="margin-bottom: 0.25rem; font-weight: 600;">Tu carrito está vacío.</p>
+          <small style="color: var(--text-muted);">Añade títulos desde el catálogo para comenzar.</small>
         </div>
       `;
-    });
-}
-
-// ==============================================================================
-// 5. GESTIÓN DE EVENTOS E INTERACTIVIDAD
-// ==============================================================================
-
-/**
- * Configura el evento 'click' para alternar la visibilidad del bloque de ofertas.
- */
-function configurarEventoOfertas() {
-  const botonOfertas = document.getElementById("boton_ofertas");
-  const seccionOfertas = document.getElementById("seccion_ofertas");
-
-  if (!botonOfertas || !seccionOfertas) return;
-
-  botonOfertas.addEventListener("click", () => {
-    seccionOfertas.classList.toggle("d-none");
-    const estaOculta = seccionOfertas.classList.contains("d-none");
-
-    botonOfertas.textContent = estaOculta
-      ? "🔥 Ver Ofertas Especiales"
-      : "❌ Ocultar Ofertas";
-  });
-}
-
-/**
- * Configura eventos 'mouseover' y 'mouseout' en los enlaces del menú para orientar al usuario.
- */
-function configurarEventosMouseMenu() {
-  const leadInfo = document.getElementById("lead_info");
-  if (!leadInfo) return;
-
-  const textoOriginal = "Explora nuestra selección especial de videojuegos recomendados con despacho prioritario en Chile.";
-
-  const enlacesGuia = [
-    { id: "menu_inicio", texto: "🎮 EriGamesStore: tu destino definitivo para títulos de PS5, Switch, Xbox y PC." },
-    { id: "menu_productos", texto: "📦 Catálogo Gamer: videojuegos 100% originales con despacho express a todo Chile." },
-    { id: "menu_categorias", texto: "⚔️ Explora por género: Aventura, RPG, Deportes, Plataformas y Survival Horror." },
-    { id: "menu_beneficios", texto: "🛡️ Compra segura: Garantía oficial, pago cifrado SSL y asesoría de expertos." },
-    { id: "menu_contacto", texto: "✉️ ¿Dudas o cotizaciones? Escríbenos y te responderemos en menos de 24 horas." }
-  ];
-
-  enlacesGuia.forEach(({ id, texto }) => {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-      elemento.addEventListener("mouseover", () => {
-        leadInfo.textContent = texto;
-        leadInfo.style.color = "var(--accent-cyan)";
-        leadInfo.style.fontWeight = "600";
-      });
-      elemento.addEventListener("mouseout", () => {
-        leadInfo.textContent = textoOriginal;
-        leadInfo.style.color = "";
-        leadInfo.style.fontWeight = "";
-      });
-    }
-  });
-}
-
-/**
- * Valida el formulario de contacto mediante expresiones regulares y retroalimentación inline.
- * Intercepta el envío con preventDefault() y posiciona el foco en el primer campo inválido.
- */
-function configurarEventoSubmitFormulario() {
-  const formContacto = document.getElementById("form_contacto");
-  const cajaMensaje = document.getElementById("mensaje_estado");
-
-  if (!formContacto || !cajaMensaje) return;
-
-  /**
-   * Muestra o limpia la retroalimentación visual inline en un campo específico.
-   * @param {string} inputId - Identificador del campo input/select/textarea.
-   * @param {string} errorId - Identificador del elemento de error inline.
-   * @param {string|null} mensajeError - Mensaje a desplegar, o null si es válido.
-   */
-  function actualizarEstadoCampo(inputId, errorId, mensajeError) {
-    const input = document.getElementById(inputId);
-    const spanError = document.getElementById(errorId);
-    if (!input || !spanError) return;
-
-    if (mensajeError) {
-      spanError.textContent = mensajeError;
-      spanError.style.display = "block";
-      input.style.borderColor = "var(--accent-red)";
     } else {
-      spanError.textContent = "";
-      spanError.style.display = "none";
-      input.style.borderColor = "var(--accent-green)";
+      areaResumen.innerHTML = "";
+
+      carritoCompras.forEach((item) => {
+        const cardItem = document.createElement("div");
+        cardItem.className = "cart-item-card";
+
+        cardItem.innerHTML = `
+          <img src="${item.imagen}" alt="${item.nombre}" class="cart-item-img">
+          <div class="cart-item-details">
+            <h6 class="cart-item-title">${item.nombre}</h6>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="cart-item-price">${formatearPrecioCLP(item.precio)}</span>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-restar-qty" data-id="${item.id}" style="padding: 0 6px; font-size: 0.75rem; color: #fff;">-</button>
+                <span style="font-size: 0.8rem; font-weight: 700; padding: 0 4px;">${item.cantidad}</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-sumar-qty" data-id="${item.id}" style="padding: 0 6px; font-size: 0.75rem; color: #fff;">+</button>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-eliminar-item" data-id="${item.id}" title="Eliminar del carrito" aria-label="Eliminar ${item.nombre}" style="background: transparent; border: none; color: var(--accent-red); font-size: 1rem; cursor: pointer; padding: 4px;">
+            ✖
+          </button>
+        `;
+
+        // Eventos de botones en panel Offcanvas
+        cardItem.querySelector(".btn-restar-qty").addEventListener("click", () => modificarCantidadCarrito(item.id, -1));
+        cardItem.querySelector(".btn-sumar-qty").addEventListener("click", () => modificarCantidadCarrito(item.id, 1));
+        cardItem.querySelector(".btn-eliminar-item").addEventListener("click", () => eliminarDelCarrito(item.id));
+
+        areaResumen.appendChild(cardItem);
+      });
     }
   }
 
-  formContacto.addEventListener("submit", (evento) => {
-    evento.preventDefault(); // Detener recarga por defecto
-
-    const inputNombre = document.getElementById("nombre");
-    const inputEmail = document.getElementById("email");
-    const selectMotivo = document.getElementById("motivo");
-    const inputMensaje = document.getElementById("mensaje");
-
-    let primerCampoInvalido = null;
-
-    // 1. Validación de nombre con expresión regular (alfabético, tildes, mínimo 3 caracteres)
-    const regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,50}$/;
-    if (!regexNombre.test(inputNombre.value.trim())) {
-      actualizarEstadoCampo("nombre", "error_nombre", "Ingresa tu nombre (mínimo 3 letras, sin números ni símbolos).");
-      if (!primerCampoInvalido) primerCampoInvalido = inputNombre;
+  // 2. Actualizar área de resumen designada en la página principal (#contenedor-resumen-pagina)
+  const resumenPagina = document.getElementById("contenedor-resumen-pagina");
+  if (resumenPagina) {
+    if (carritoCompras.length === 0) {
+      resumenPagina.innerHTML = `
+        <div class="carrito-vacio-aviso">
+          <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.5rem;">Tu carrito de compras está vacío.</p>
+          <small style="color: var(--text-muted);">Haz clic en "Añadir al Carrito" en cualquiera de nuestros títulos para armar tu pedido.</small>
+        </div>
+      `;
     } else {
-      actualizarEstadoCampo("nombre", "error_nombre", null);
+      let filasHtml = "";
+      carritoCompras.forEach((item) => {
+        const subtotal = item.precio * item.cantidad;
+        filasHtml += `
+          <div class="carrito-fila-item">
+            <img src="${item.imagen}" alt="${item.nombre}" class="carrito-fila-img" onerror="if(this.src.includes('/img/')&&!this.src.includes('/assets/img/')){this.src=this.src.replace('/img/','/assets/img/');}">
+            <div class="carrito-fila-info">
+              <h4>${item.nombre}</h4>
+              <span class="carrito-fila-plataforma">${item.plataforma || "Multiplataforma"}</span>
+            </div>
+            <div class="carrito-fila-precio">
+              ${formatearPrecioCLP(item.precio)}
+            </div>
+            <div class="carrito-fila-controles">
+              <button type="button" class="btn-qty btn-restar-qty" data-id="${item.id}" aria-label="Disminuir cantidad">-</button>
+              <span class="qty-num">${item.cantidad}</span>
+              <button type="button" class="btn-qty btn-sumar-qty" data-id="${item.id}" aria-label="Aumentar cantidad">+</button>
+            </div>
+            <div class="carrito-fila-subtotal">
+              ${formatearPrecioCLP(subtotal)}
+            </div>
+            <button type="button" class="btn-eliminar-fila" data-id="${item.id}" aria-label="Eliminar ${item.nombre}">
+              Eliminar
+            </button>
+          </div>
+        `;
+      });
+
+      resumenPagina.innerHTML = `
+        <div class="carrito-tabla-contenedor">
+          ${filasHtml}
+        </div>
+        <div class="carrito-resumen-footer">
+          <div class="carrito-total-box">
+            <span>Total estimado (${totalCantidad} ${totalCantidad === 1 ? 'juego' : 'juegos'}):</span>
+            <strong class="total-monto">${formatearPrecioCLP(totalPrecio)}</strong>
+          </div>
+          <div class="carrito-acciones-box">
+            <button type="button" class="btn-vaciar-pagina" id="btn-vaciar-pagina">
+              Vaciar carrito
+            </button>
+            <button type="button" class="btn-checkout-pagina" id="btn-checkout-pagina">
+              Completar compra
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Eventos de botones en la sección designada
+      const btnVaciarPagina = resumenPagina.querySelector("#btn-vaciar-pagina");
+      if (btnVaciarPagina) {
+        btnVaciarPagina.addEventListener("click", vaciarCarrito);
+      }
+      const btnCheckoutPagina = resumenPagina.querySelector("#btn-checkout-pagina");
+      if (btnCheckoutPagina) {
+        btnCheckoutPagina.addEventListener("click", iniciarCheckout);
+      }
+
+      resumenPagina.querySelectorAll(".btn-restar-qty").forEach(btn => {
+        btn.addEventListener("click", () => modificarCantidadCarrito(btn.dataset.id, -1));
+      });
+      resumenPagina.querySelectorAll(".btn-sumar-qty").forEach(btn => {
+        btn.addEventListener("click", () => modificarCantidadCarrito(btn.dataset.id, 1));
+      });
+      resumenPagina.querySelectorAll(".btn-eliminar-fila").forEach(btn => {
+        btn.addEventListener("click", () => eliminarDelCarrito(btn.dataset.id));
+      });
     }
-
-    // 2. Validación de correo con expresión regular robusta (usuario@dominio.extension)
-    const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!regexEmail.test(inputEmail.value.trim())) {
-      actualizarEstadoCampo("email", "error_email", "Ingresa un correo electrónico válido (ejemplo: usuario@correo.com).");
-      if (!primerCampoInvalido) primerCampoInvalido = inputEmail;
-    } else {
-      actualizarEstadoCampo("email", "error_email", null);
-    }
-
-    // 3. Validación de selección de motivo
-    if (selectMotivo.value === "") {
-      actualizarEstadoCampo("motivo", "error_motivo", "Selecciona una opción de la lista.");
-      if (!primerCampoInvalido) primerCampoInvalido = selectMotivo;
-    } else {
-      actualizarEstadoCampo("motivo", "error_motivo", null);
-    }
-
-    // 4. Validación de mensaje (mínimo 10 caracteres)
-    if (inputMensaje.value.trim().length < 10) {
-      actualizarEstadoCampo("mensaje", "error_mensaje", "El mensaje debe contener al menos 10 caracteres explicativos.");
-      if (!primerCampoInvalido) primerCampoInvalido = inputMensaje;
-    } else {
-      actualizarEstadoCampo("mensaje", "error_mensaje", null);
-    }
-
-    // 5. Direccionamiento automático del foco hacia el primer campo erróneo
-    if (primerCampoInvalido) {
-      primerCampoInvalido.focus();
-      return;
-    }
-
-    // Despliegue de mensaje de éxito en el DOM
-    cajaMensaje.style.display = "block";
-    cajaMensaje.style.backgroundColor = "rgba(16, 185, 129, 0.15)";
-    cajaMensaje.style.border = "1px solid var(--accent-green)";
-    cajaMensaje.style.color = "#ffffff";
-    cajaMensaje.textContent = `✅ ¡Mensaje enviado con éxito, ${inputNombre.value.trim()}! Te responderemos a ${inputEmail.value.trim()} a la brevedad.`;
-
-    formContacto.reset();
-
-    // Restablecer estilos de bordes
-    [inputNombre, inputEmail, selectMotivo, inputMensaje].forEach((el) => {
-      el.style.borderColor = "";
-    });
-
-    setTimeout(() => {
-      cajaMensaje.style.display = "none";
-    }, 6000);
-  });
+  }
 }
 
 // ==============================================================================
-// 6. TEMPORIZADORES ASINCRÓNICOS
+// 6. BUSCADOR Y FILTROS POR CATEGORÍA
 // ==============================================================================
 
 /**
- * Restablece los estilos aplicados dinámicamente eliminando propiedades en línea.
+ * Filtra el catálogo según el término de búsqueda ingresado.
+ * @param {string} termino
  */
-function reestablecerColores() {
-  const enlacesMenu = document.querySelectorAll(".nav-link");
-  enlacesMenu.forEach((el) => {
-    el.style.color = "";
-    el.style.removeProperty("color");
+function filtrarPorBusqueda(termino) {
+  const normalizado = termino.trim().toLowerCase();
+  if (!normalizado) {
+    mostrarProductos(productosCatalogo);
+    return;
+  }
+
+  const filtrados = productosCatalogo.filter((prod) =>
+    prod.nombre.toLowerCase().includes(normalizado) ||
+    prod.categoria.toLowerCase().includes(normalizado) ||
+    prod.plataforma.toLowerCase().includes(normalizado)
+  );
+
+  mostrarProductos(filtrados);
+}
+
+/**
+ * Filtra el catálogo según la categoría seleccionada.
+ * @param {string} categoria
+ */
+function filtrarPorCategoria(categoria) {
+  // Actualizar estado activo en los botones de filtro
+  document.querySelectorAll(".btn-filtro-cat").forEach((btn) => {
+    if (btn.dataset.categoria === categoria) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
   });
+
+  if (categoria === "todos") {
+    mostrarProductos(productosCatalogo);
+    return;
+  }
+
+  const filtrados = productosCatalogo.filter((p) =>
+    p.categoria.toLowerCase().includes(categoria.toLowerCase())
+  );
+  mostrarProductos(filtrados);
+}
+
+/**
+ * Restablece los filtros para mostrar todos los juegos.
+ */
+function restablecerFiltros() {
+  const inputBusqueda = document.getElementById("input-busqueda");
+  if (inputBusqueda) inputBusqueda.value = "";
+  filtrarPorCategoria("todos");
 }
 
 // ==============================================================================
-// 7. PUNTO DE ENTRADA SEGURO (DOMContentLoaded)
+// 7. INTERACTIVIDAD DEL CARRUSEL, OFERTAS Y FORMULARIO DE CONTACTO
 // ==============================================================================
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("El DOM está listo para ser manipulado con total seguridad.");
+/**
+ * Configura los eventos del carrusel, ofertas interactivas y formulario.
+ */
+function inicializarEventosUI() {
+  // 1. Control de Pausa / Reproducción del Carrusel (Accesibilidad)
+  const btnPausa = document.getElementById("btn_pausa_carrusel");
+  const carruselEl = document.getElementById("carruselEriGames");
 
-  // Resalta los enlaces del menú temporalmente y los restaura tras 3 segundos
-  const enlacesMenu = document.querySelectorAll(".nav-link");
-  enlacesMenu.forEach((el) => {
-    el.style.setProperty("color", "#00f0ff", "important");
+  if (btnPausa && carruselEl && typeof bootstrap !== "undefined") {
+    const carruselBS = bootstrap.Carousel.getOrCreateInstance(carruselEl);
+    let estaPausado = false;
+
+    btnPausa.addEventListener("click", () => {
+      if (estaPausado) {
+        carruselBS.cycle();
+        btnPausa.textContent = "⏸️ Pausar";
+        btnPausa.setAttribute("aria-label", "Pausar rotación automática del carrusel");
+        estaPausado = false;
+      } else {
+        carruselBS.pause();
+        btnPausa.textContent = "▶️ Reanudar";
+        btnPausa.setAttribute("aria-label", "Reanudar rotación automática del carrusel");
+        estaPausado = true;
+      }
+    });
+  }
+
+  // 2. Alternar sección de ofertas mediante evento click
+  const botonOfertas = document.getElementById("boton_ofertas");
+  const seccionOfertas = document.getElementById("seccion_ofertas");
+
+  if (botonOfertas && seccionOfertas) {
+    botonOfertas.addEventListener("click", () => {
+      const oculta = seccionOfertas.classList.toggle("d-none");
+      botonOfertas.textContent = oculta ? "🔥 Ver Ofertas Especiales" : "✖️ Ocultar Ofertas";
+    });
+  }
+
+  // 3. Efectos mouseover y mouseout en el texto orientador
+  const leadInfo = document.getElementById("lead_info");
+  if (leadInfo) {
+    leadInfo.addEventListener("mouseover", () => {
+      leadInfo.style.color = "var(--accent-cyan)";
+      leadInfo.style.transition = "color var(--transition-fast)";
+    });
+    leadInfo.addEventListener("mouseout", () => {
+      leadInfo.style.color = "";
+    });
+  }
+
+  // 4. Formulario de Búsqueda
+  const formBusqueda = document.getElementById("formulario-busqueda");
+  const inputBusqueda = document.getElementById("input-busqueda");
+
+  if (formBusqueda && inputBusqueda) {
+    formBusqueda.addEventListener("submit", (e) => {
+      e.preventDefault();
+      filtrarPorBusqueda(inputBusqueda.value);
+    });
+
+    inputBusqueda.addEventListener("input", () => {
+      filtrarPorBusqueda(inputBusqueda.value);
+    });
+  }
+
+  // 5. Botones de filtro rápido por categoría
+  document.querySelectorAll(".btn-filtro-cat").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filtrarPorCategoria(btn.dataset.categoria);
+    });
   });
-  setTimeout(reestablecerColores, 3000);
 
-  // Inicialización de módulos
+  // Botones de categoría en el menú desplegable de la barra de navegación
+  document.querySelectorAll(".btn-categoria-nav").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filtrarPorCategoria(btn.dataset.categoria);
+      const seccion = document.getElementById("productos");
+      if (seccion) seccion.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  // 6. Botones del Carrito (Vaciar y Finalizar)
+  const btnVaciar = document.getElementById("btn-vaciar-carrito");
+  if (btnVaciar) {
+    btnVaciar.addEventListener("click", () => {
+      if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
+        vaciarCarrito();
+      }
+    });
+  }
+
+  const btnFinalizar = document.getElementById("btn-finalizar-compra");
+  if (btnFinalizar) {
+    btnFinalizar.addEventListener("click", iniciarCheckout);
+  }
+
+  // 7. Validación del Formulario de Contacto
+  const formContacto = document.getElementById("form_contacto");
+  if (formContacto) {
+    formContacto.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+
+      const inputNombre = document.getElementById("nombre");
+      const inputEmail = document.getElementById("email");
+      const selectMotivo = document.getElementById("motivo");
+      const textareaMensaje = document.getElementById("mensaje");
+      const divEstado = document.getElementById("mensaje_estado");
+
+      // Spans de error
+      const errNombre = document.getElementById("error_nombre");
+      const errEmail = document.getElementById("error_email");
+      const errMotivo = document.getElementById("error_motivo");
+      const errMensaje = document.getElementById("error_mensaje");
+
+      // Limpiar errores previos
+      [errNombre, errEmail, errMotivo, errMensaje].forEach((span) => {
+        if (span) {
+          span.textContent = "";
+          span.style.display = "none";
+        }
+      });
+      [inputNombre, inputEmail, selectMotivo, textareaMensaje].forEach((input) => {
+        if (input) input.style.borderColor = "";
+      });
+
+      let esValido = true;
+
+      // Validación Nombre
+      if (!inputNombre.value.trim() || inputNombre.value.trim().length < 3) {
+        mostrarErrorInput(inputNombre, errNombre, "Ingresa un nombre válido (mínimo 3 caracteres).");
+        esValido = false;
+      }
+
+      // Validación Correo
+      const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!regexEmail.test(inputEmail.value.trim())) {
+        mostrarErrorInput(inputEmail, errEmail, "Ingresa un correo electrónico con formato válido.");
+        esValido = false;
+      }
+
+      // Validación Motivo
+      if (!selectMotivo.value) {
+        mostrarErrorInput(selectMotivo, errMotivo, "Selecciona un motivo de consulta.");
+        esValido = false;
+      }
+
+      // Validación Mensaje
+      if (!textareaMensaje.value.trim() || textareaMensaje.value.trim().length < 10) {
+        mostrarErrorInput(textareaMensaje, errMensaje, "El mensaje debe contener al menos 10 caracteres.");
+        esValido = false;
+      }
+
+      if (!esValido) {
+        if (divEstado) {
+          divEstado.style.display = "block";
+          divEstado.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
+          divEstado.style.border = "1px solid var(--accent-red)";
+          divEstado.style.color = "#fca5a5";
+          divEstado.textContent = "Por favor, completa correctamente todos los campos obligatorios.";
+        }
+        return;
+      }
+
+      // Formulario exitoso
+      if (divEstado) {
+        divEstado.style.display = "block";
+        divEstado.style.backgroundColor = "rgba(16, 185, 129, 0.15)";
+        divEstado.style.border = "1px solid var(--accent-green)";
+        divEstado.style.color = "#86efac";
+        divEstado.textContent = `¡Gracias por contactarnos, ${inputNombre.value.trim()}! Hemos recibido tu mensaje y te responderemos a la brevedad.`;
+      }
+
+      formContacto.reset();
+
+      setTimeout(() => {
+        if (divEstado) divEstado.style.display = "none";
+      }, 5000);
+    });
+  }
+}
+
+/**
+ * Despliega un mensaje de error inline y resalta el campo inválido.
+ * @param {HTMLElement} inputEl
+ * @param {HTMLElement} errorSpanEl
+ * @param {string} mensaje
+ */
+function mostrarErrorInput(inputEl, errorSpanEl, mensaje) {
+  if (inputEl) inputEl.style.borderColor = "var(--accent-red)";
+  if (errorSpanEl) {
+    errorSpanEl.textContent = mensaje;
+    errorSpanEl.style.display = "block";
+  }
+}
+
+// ==============================================================================
+// 8. INICIALIZACIÓN GENERAL DE LA APLICACIÓN AL CARGAR EL DOM
+// ==============================================================================
+document.addEventListener("DOMContentLoaded", () => {
+  inicializarCarrito();
   cargarProductos();
-  configurarEventoOfertas();
-  configurarEventosMouseMenu();
-  configurarEventoSubmitFormulario();
+  inicializarEventosUI();
 });

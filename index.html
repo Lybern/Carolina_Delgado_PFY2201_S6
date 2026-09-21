@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <!-- ==========================================================================
-         PFY2201 - DESARROLLO FRONTEND I - EVALUACIÓN SUMATIVA SEMANA 3
+         PFY2201 - DESARROLLO FRONTEND I - EVALUACIÓN SUMATIVA SEMANA 6
          Estudiante: Carolina Delgado | Institución: Duoc UC
          Proyecto: EriGamesStore - Tienda de Videojuegos Online
          ========================================================================== -->
@@ -12,23 +12,26 @@
     <meta name="keywords" content="EriGamesStore, videojuegos, tienda gamer, consolas, PS5, Nintendo Switch, Xbox Series X, PC Gaming, ofertas gamer, Duoc UC">
     <meta name="author" content="Carolina Delgado - PFY2201">
     <meta name="theme-color" content="#0a0f1d">
-    <title>EriGamesStore - Tienda de Videojuegos Online | Semana 3</title>
+    <title>EriGamesStore - Tienda de Videojuegos Online | Semana 6</title>
 
-    <!-- Preconexión para fuentes de Google Fonts -->
+    <!-- Preconexión para Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-    <!-- Hoja de estilos CSS externa (Paso 1 de la actividad) -->
+    <!-- Bootstrap 5.3 CSS vía CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Hoja de estilos CSS externa personalizada -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Enlace de accesibilidad para lectores de pantalla y navegación por teclado -->
+    <!-- Enlace accesible para navegación por teclado -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
     <!-- ==========================================================================
-         CABECERA DEL SITIO (HEADER) - PASO 2: ESTRUCTURA Y FLEXBOX
+         1. CABECERA PRINCIPAL (HEADER)
          ========================================================================== -->
     <header id="inicio" class="site-header">
         <div class="header-container">
@@ -47,69 +50,173 @@
     </header>
 
     <!-- ==========================================================================
-         MENÚ DE NAVEGACIÓN PRINCIPAL (NAV) - FLEXBOX RESPONSIVO
+         2. MENÚ DE NAVEGACIÓN PRINCIPAL (NAV) - BOOTSTRAP 5 RESPONSIVO CON CATEGORÍAS
          ========================================================================== -->
-    <nav class="site-nav" aria-label="Navegación principal">
-        <div class="nav-container">
-            <ul class="nav-list">
-                <li><a class="nav-link nav-active" href="#inicio" id="menu_inicio" title="Ir al inicio del sitio">Inicio</a></li>
-                <li><a class="nav-link" href="#productos" id="menu_productos" title="Ver el catálogo de productos destacados">Productos</a></li>
-                <li><a class="nav-link" href="#categorias" id="menu_categorias" title="Explorar categorías de juegos">Categorías</a></li>
-                <li><a class="nav-link" href="#beneficios" id="menu_beneficios" title="Conocer beneficios y garantías">Beneficios</a></li>
-                <li><a class="nav-link" href="#contacto" id="menu_contacto" title="Ver información de contacto y formulario">Contacto</a></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark site-nav sticky-top" aria-label="Navegación principal">
+        <div class="container nav-container">
+            <!-- Logotipo y Nombre de Marca -->
+            <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" href="#inicio">
+                <img src="img/erigames-logo.jpg" alt="Logotipo de EriGamesStore" width="36" height="36" class="rounded-circle" style="border: 1px solid var(--accent-cyan);">
+                <span style="color: #ffffff; font-weight: 800; font-family: var(--font-heading); font-size: 1.15rem;">EriGamesStore</span>
+            </a>
+
+            <!-- Contenedor móvil con botón de carrito y toggler -->
+            <div class="d-flex align-items-center gap-2 d-lg-none">
+                <button type="button" class="nav-cart-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCarrito" aria-controls="offcanvasCarrito" aria-label="Ver carrito">
+                    <span>🛒</span>
+                    <span class="nav-cart-badge badge-contador-movil">0</span>
+                </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú de navegación" style="border: 1px solid rgba(0, 240, 255, 0.4); background: rgba(17, 26, 46, 0.85); padding: 0.4rem 0.6rem;">
+                    <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+                </button>
+            </div>
+
+            <!-- Menú colapsable con enlaces y categorías simuladas -->
+            <div class="collapse navbar-collapse" id="menuPrincipal">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link nav-active" href="#inicio" id="menu_inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#productos" id="menu_productos">Productos</a>
+                    </li>
+                    <!-- Menú desplegable con categorías simuladas (Exigencia de rúbrica) -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#categorias" id="menu_categorias" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categorías
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark border-secondary shadow" aria-labelledby="menu_categorias">
+                            <li><button type="button" class="dropdown-item btn-categoria-nav" data-categoria="todos">🎮 Todos los Títulos</button></li>
+                            <li><hr class="dropdown-divider border-secondary"></li>
+                            <li><button type="button" class="dropdown-item btn-categoria-nav" data-categoria="Aventura y Acción">⚔️ Aventura y Acción</button></li>
+                            <li><button type="button" class="dropdown-item btn-categoria-nav" data-categoria="Rol (RPG)">🛡️ Juegos de Rol (RPG)</button></li>
+                            <li><button type="button" class="dropdown-item btn-categoria-nav" data-categoria="Deportes">🏎️ Deportes y Carreras</button></li>
+                            <li><button type="button" class="dropdown-item btn-categoria-nav" data-categoria="Plataformas">🍄 Plataformas y Familiar</button></li>
+                            <li><button type="button" class="dropdown-item btn-categoria-nav" data-categoria="Survival Horror">🧟 Survival Horror</button></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#beneficios" id="menu_beneficios">Beneficios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto" id="menu_contacto">Contacto</a>
+                    </li>
+                </ul>
+
+                <!-- Acciones integradas: Buscador y Carrito de Compras para escritorio -->
+                <div class="nav-actions">
+                    <form class="nav-search-form" id="formulario-busqueda" role="search">
+                        <input class="nav-search-input" id="input-busqueda" type="search" placeholder="Buscar videojuego..." aria-label="Buscar videojuego en la tienda">
+                        <button class="nav-search-btn" type="submit" id="btn-buscar">Buscar</button>
+                    </form>
+
+                    <button type="button" class="nav-cart-btn d-none d-lg-inline-flex" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCarrito" aria-controls="offcanvasCarrito" id="btn-abrir-carrito" title="Abrir carrito de compras">
+                        <span>🛒 Carrito</span>
+                        <span class="nav-cart-badge" id="badge-contador-carrito">0</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </nav>
 
     <!-- ==========================================================================
-         HERO / BANNER PROMOCIONAL - MODELO DE CAJAS Y FLEXBOX
+         3. HERO CARRUSEL ACCESIBLE (BOOTSTRAP 5)
          ========================================================================== -->
-    <section class="hero-banner" aria-label="Banner promocional">
-        <div class="container hero-content">
-            <div class="hero-text-box">
-                <span class="hero-tag">🔥 OFERTAS DE TEMPORADA &bull; SEMANA 3</span>
-                <h2>Sube de nivel tu experiencia de juego</h2>
-                <p>Descubre los últimos lanzamientos para PlayStation 5, Nintendo Switch, Xbox Series X y PC con hasta 30% de descuento y despacho prioritario.</p>
-                <div class="hero-actions">
-                    <a href="#productos" class="btn btn-primary" title="Explorar catálogo destacado">Ver Catálogo Destacado</a>
-                    <a href="#contacto" class="btn btn-secondary" title="Cotizar pedidos especiales">Contáctanos</a>
+    <section aria-label="Promociones y videojuegos destacados" class="position-relative hero-carousel-section">
+        <div id="carruselEriGames" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3500">
+
+            <!-- Botón de Pausa / Reproducción para Accesibilidad (WCAG) -->
+            <button type="button" id="btn_pausa_carrusel" class="btn-carrusel-control" aria-label="Pausar rotación automática del carrusel">
+                ⏸️ Pausar
+            </button>
+
+            <!-- Indicadores de diapositiva -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carruselEriGames" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Diapositiva 1: Zelda Tears of the Kingdom"></button>
+                <button type="button" data-bs-target="#carruselEriGames" data-bs-slide-to="1" aria-label="Diapositiva 2: Cyberpunk 2077"></button>
+                <button type="button" data-bs-target="#carruselEriGames" data-bs-slide-to="2" aria-label="Diapositiva 3: Super Mario Bros Wonder"></button>
+            </div>
+
+            <!-- Diapositivas -->
+            <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active" data-bs-interval="3500">
+                    <img src="img/zelda-totk.jpg" class="d-block w-100" alt="The Legend of Zelda: Tears of the Kingdom" width="1200" height="440">
+                    <div class="carousel-caption d-block">
+                        <span class="badge badge-featured" style="position: static; display: inline-block; margin-bottom: 0.5rem;">⭐ MÁS VENDIDO</span>
+                        <h2>The Legend of Zelda: Tears of the Kingdom</h2>
+                        <p>Explora los cielos y las profundidades de Hyrule con despacho prioritario a todo Chile.</p>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item" data-bs-interval="3500">
+                    <img src="img/cyberpunk-2077.jpg" class="d-block w-100" alt="Cyberpunk 2077: Phantom Liberty" loading="lazy" width="1200" height="440">
+                    <div class="carousel-caption d-block">
+                        <span class="badge badge-special" style="position: static; display: inline-block; margin-bottom: 0.5rem;">🔥 EXPANSIÓN TOP</span>
+                        <h2>Cyberpunk 2077: Phantom Liberty</h2>
+                        <p>Gráficos de última generación y acción RPG inmersiva en Night City con hasta 25% de descuento.</p>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item" data-bs-interval="3500">
+                    <img src="img/mario-wonder.jpg" class="d-block w-100" alt="Super Mario Bros. Wonder" loading="lazy" width="1200" height="440">
+                    <div class="carousel-caption d-block">
+                        <span class="badge badge-popular" style="position: static; display: inline-block; margin-bottom: 0.5rem;">✨ NOVEDAD</span>
+                        <h2>Super Mario Bros. Wonder</h2>
+                        <p>Magia, sorpresas constantes y juego cooperativo local y en línea para Nintendo Switch.</p>
+                    </div>
                 </div>
             </div>
+
+            <!-- Controles de navegación del carrusel -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#carruselEriGames" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Diapositiva anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carruselEriGames" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Diapositiva siguiente</span>
+            </button>
         </div>
     </section>
 
+    <!-- ==========================================================================
+         4. CONTENIDO PRINCIPAL (<main>)
+         ========================================================================== -->
     <main id="main-content" class="container">
 
-        <!-- SECCIÓN INTERACTIVA DE BIENVENIDA Y OFERTAS (PASO 3: EVENTO CLICK) -->
-        <section class="section-block" aria-label="Ofertas y novedades gamer" style="padding-bottom: 0;">
-            <div class="card-ofertas-container" style="background: var(--bg-card); border: 1px solid var(--border-accent); border-left: 5px solid var(--accent-gold); border-radius: var(--radius-md); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: gap: 1rem;">
+        <!-- SECCIÓN DE BIENVENIDA Y OFERTAS -->
+        <section class="section-block" aria-label="Ofertas y promociones gamer" style="padding-bottom: 0;">
+            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-left: 5px solid var(--accent-gold); border-radius: var(--radius-md); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                     <div>
-                        <h2 style="font-size: 1.4rem; color: #ffffff; margin-bottom: 0.25rem;">🎮 Catálogo EriGamesStore</h2>
+                        <h2 style="font-size: 1.4rem; color: #ffffff; margin-bottom: 0.25rem;">🎮 Catálogo Oficial EriGamesStore</h2>
                         <p id="lead_info" style="color: var(--text-muted); margin: 0;">
                             Explora nuestra selección especial de videojuegos recomendados con despacho prioritario en Chile.
                         </p>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary" id="boton_ofertas" style="white-space: nowrap; font-weight: 700; background: var(--accent-gold); color: #000000; border: none; padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); cursor: pointer;">
+                        <button type="button" class="btn" id="boton_ofertas" style="white-space: nowrap; font-weight: 700; background: var(--accent-gold); color: #0f172a; border: none; padding: 0.65rem 1.3rem; border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-heading);">
                             🔥 Ver Ofertas Especiales
                         </button>
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE OFERTAS ESPECIALES (Alternada dinámicamente con JS mediante evento CLICK) -->
-                <div id="seccion_ofertas" class="d-none" style="margin-top: 1rem; padding: 1.25rem; border-radius: var(--radius-sm); background: rgba(245, 158, 11, 0.1); border: 1px dashed var(--accent-gold); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <!-- Cuadro de ofertas desplegable dinámicamente con JS -->
+                <div id="seccion_ofertas" class="d-none" style="margin-top: 0.5rem; padding: 1.25rem; border-radius: var(--radius-sm); background: rgba(245, 158, 11, 0.1); border: 1px dashed var(--accent-gold); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                     <div>
                         <h3 style="color: var(--accent-gold); font-size: 1.1rem; margin-bottom: 0.25rem;">🎉 ¡Descuentos de la Semana para Gamers!</h3>
-                        <p style="color: var(--text-secondary); margin: 0; font-size: 0.95rem;">Aprovecha hasta un <strong>30% de descuento adicional</strong> en títulos seleccionados para Nintendo Switch y PS5.</p>
+                        <p style="color: var(--text-secondary); margin: 0; font-size: 0.95rem;">Aprovecha hasta un <strong>30% de descuento adicional</strong> en títulos seleccionados para Nintendo Switch, PS5 y Xbox.</p>
                     </div>
-                    <span class="badge" style="background: var(--accent-red); color: #ffffff; padding: 0.4rem 0.8rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem;">Válido hasta agotar stock</span>
+                    <span class="badge" style="position: static; background: var(--accent-red); color: #ffffff; padding: 0.4rem 0.8rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem;">Válido hasta agotar stock</span>
                 </div>
             </div>
         </section>
 
         <!-- ----------------------------------------------------------------------
-             SECCIÓN 1: PRODUCTOS DESTACADOS (#productos) - CSS GRID
+             SECCIÓN 1: PRODUCTOS DESTACADOS (#productos) - CARGA DINÁMICA CON JS
              ---------------------------------------------------------------------- -->
         <section id="productos" class="section-block">
             <div class="section-header">
@@ -117,13 +224,35 @@
                 <p>Descubre los videojuegos más vendidos y aclamados por la comunidad disponibles en nuestra tienda con entrega inmediata:</p>
             </div>
 
+            <!-- Botones de filtro rápido por género -->
+            <div class="filter-btn-group" role="group" aria-label="Filtrar catálogo por género">
+                <button type="button" class="btn-filtro-cat active" data-categoria="todos">Todos los Títulos</button>
+                <button type="button" class="btn-filtro-cat" data-categoria="Aventura y Acción">Aventura y Acción</button>
+                <button type="button" class="btn-filtro-cat" data-categoria="Rol (RPG)">Rol (RPG)</button>
+                <button type="button" class="btn-filtro-cat" data-categoria="Deportes">Deportes</button>
+                <button type="button" class="btn-filtro-cat" data-categoria="Plataformas">Plataformas</button>
+                <button type="button" class="btn-filtro-cat" data-categoria="Survival Horror">Survival Horror</button>
+            </div>
+
             <!-- Contenedor dinámico donde JavaScript insertará las tarjetas mediante createElement y appendChild -->
             <div id="contenedor_productos" class="products-grid" aria-live="polite">
-                <!-- Indicador visual de carga (Spinner) mientras Fetch API obtiene los datos -->
                 <div class="spinner-caja" id="spinner_carga" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
                     <div class="spinner-gamer" role="status" aria-label="Cargando catálogo"></div>
                     <p style="color: var(--text-muted); margin-top: 1rem; font-weight: 600;">Cargando catálogo oficial de videojuegos...</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- ======================================================================
+             SECCIÓN DESIGNADA: RESUMEN DEL CARRITO DE COMPRAS (MANIPULACIÓN DOM)
+             ====================================================================== -->
+        <section id="carrito" class="section-block" aria-label="Resumen dinámico del carrito de compras">
+            <div class="section-header">
+                <h2>🛒 Carrito de compras (Área designada)</h2>
+                <p>Aquí se visualiza en tiempo real el resumen de todos los videojuegos que agregas a tu compra:</p>
+            </div>
+            <div id="contenedor-resumen-pagina" class="carrito-resumen-caja">
+                <!-- Se actualiza dinámicamente con JavaScript -->
             </div>
         </section>
 
@@ -231,7 +360,7 @@
             </div>
 
             <div class="contact-layout-grid">
-                <!-- Columna 1: Tarjetas de Información de Contacto -->
+                <!-- Columna 1: Datos de Contacto -->
                 <div class="contact-info-panel">
                     <ul class="contact-cards-list">
                         <li class="contact-card-item">
@@ -267,39 +396,39 @@
 
                 <!-- Columna 2: Formulario de Contacto Semántico -->
                 <div class="contact-form-panel">
-                    <!-- Mensaje de estado dinámico controlado por JavaScript (Paso 6) -->
+                    <!-- Mensaje de estado dinámico controlado por JavaScript -->
                     <div id="mensaje_estado" role="alert" style="display: none; padding: 1rem; margin-bottom: 1.25rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem;"></div>
 
-                    <form id="form_contacto" class="contact-form" novalidate>
+                    <form id="form_contacto" class="contact-form" novalidate method="post">
                         <fieldset>
                             <legend>Envíanos un mensaje</legend>
-                            <div class="form-group">
-                                <label for="nombre">Nombre completo:</label>
-                                <input type="text" id="nombre" name="nombre" placeholder="Ej: Carolina Delgado" required>
-                                <span class="error-inline" id="error_nombre" style="display: none; color: var(--accent-red); font-size: 0.82rem; margin-top: 0.25rem;"></span>
+                            <div class="form-group mb-3">
+                                <label for="nombre" class="form-label">Nombre completo:</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" maxlength="80" placeholder="Ej: Carolina Delgado" required>
+                                <div class="invalid-feedback" id="error_nombre">El nombre no puede estar vacío y debe tener al menos 3 caracteres (máx. 80).</div>
                             </div>
-                            <div class="form-group">
-                                <label for="email">Correo electrónico:</label>
-                                <input type="email" id="email" name="email" placeholder="nombre@correo.com" required>
-                                <span class="error-inline" id="error_email" style="display: none; color: var(--accent-red); font-size: 0.82rem; margin-top: 0.25rem;"></span>
+                            <div class="form-group mb-3">
+                                <label for="email" class="form-label">Correo electrónico:</label>
+                                <input type="email" class="form-control" id="email" name="email" maxlength="100" placeholder="nombre@correo.com" required>
+                                <div class="invalid-feedback" id="error_email">Ingresa un correo electrónico con formato válido (ej: usuario@dominio.cl).</div>
                             </div>
-                            <div class="form-group">
-                                <label for="motivo">Motivo de consulta:</label>
-                                <select id="motivo" name="motivo" required>
+                            <div class="form-group mb-3">
+                                <label for="motivo" class="form-label">Motivo de consulta:</label>
+                                <select class="form-select" id="motivo" name="motivo" required>
                                     <option value="" selected disabled>Selecciona una opción</option>
                                     <option value="consulta">Consulta de stock y precios</option>
                                     <option value="compra">Cotización para compra</option>
                                     <option value="envio">Estado de despacho</option>
                                     <option value="soporte">Garantía y soporte técnico</option>
                                 </select>
-                                <span class="error-inline" id="error_motivo" style="display: none; color: var(--accent-red); font-size: 0.82rem; margin-top: 0.25rem;"></span>
+                                <div class="invalid-feedback" id="error_motivo">Debe seleccionar un motivo de consulta.</div>
                             </div>
-                            <div class="form-group">
-                                <label for="mensaje">Mensaje:</label>
-                                <textarea id="mensaje" name="mensaje" rows="4" placeholder="Escribe tu consulta o requerimiento aquí..." required></textarea>
-                                <span class="error-inline" id="error_mensaje" style="display: none; color: var(--accent-red); font-size: 0.82rem; margin-top: 0.25rem;"></span>
+                            <div class="form-group mb-3">
+                                <label for="mensaje" class="form-label">Mensaje:</label>
+                                <textarea class="form-control" id="mensaje" name="mensaje" rows="4" maxlength="300" placeholder="Escribe tu consulta o requerimiento aquí..." required></textarea>
+                                <div class="invalid-feedback" id="error_mensaje">El mensaje no puede estar vacío y debe tener al menos 10 caracteres (máx. 300).</div>
                             </div>
-                            <button type="submit" class="btn btn-submit">Enviar Mensaje</button>
+                            <button type="submit" class="btn btn-submit" id="btn_enviar_formulario">Enviar Mensaje</button>
                         </fieldset>
                     </form>
                 </div>
@@ -309,7 +438,41 @@
     </main>
 
     <!-- ==========================================================================
-         PIE DE PÁGINA (FOOTER) - PASO 5: CSS GRID Y FLEXBOX RESPONSIVO
+         5. PANEL OFFCANVAS: CARRITO DE COMPRAS INTERACTIVO (BOOTSTRAP 5)
+         ========================================================================== -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel">
+        <div class="offcanvas-header" style="border-bottom: 1px solid var(--border-subtle); padding: 1rem 1.25rem;">
+            <h5 class="offcanvas-title fw-bold" id="offcanvasCarritoLabel" style="font-family: var(--font-heading); color: #ffffff;">
+                🛒 Carrito de Compras
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar carrito"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column" style="padding: 1.25rem;">
+            <!-- Área de resumen dinámico del carrito -->
+            <div id="area-resumen-carrito" class="flex-grow-1 overflow-auto">
+                <p style="color: var(--text-muted); text-align: center; margin-top: 2rem;">Tu carrito está vacío.</p>
+            </div>
+
+            <!-- Pie del carrito con totales y botones de acción -->
+            <div style="border-top: 1px solid var(--border-subtle); padding-top: 1rem; margin-top: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span style="color: var(--text-muted);">Total a pagar:</span>
+                    <strong style="font-size: 1.4rem; color: var(--accent-green); font-family: var(--font-heading);" id="total-carrito">$0 CLP</strong>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                    <button type="button" class="btn" id="btn-vaciar-carrito" style="background: transparent; border: 1px solid var(--accent-red); color: var(--accent-red); padding: 0.5rem; font-weight: 600; border-radius: var(--radius-sm); cursor: pointer;">
+                        🗑️ Vaciar Carrito
+                    </button>
+                    <button type="button" class="btn" id="btn-finalizar-compra" style="background: var(--accent-blue); border: none; color: #ffffff; padding: 0.65rem; font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-heading);">
+                        💳 Finalizar Compra
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         6. PIE DE PÁGINA (FOOTER)
          ========================================================================== -->
     <footer class="site-footer">
         <div class="container footer-layout">
@@ -356,7 +519,27 @@
         </div>
     </footer>
 
-    <!-- Script principal con lógica JavaScript -->
-    <script src="js/scripts.js"></script>
+    <!-- ==========================================================================
+         7. COMPONENTE TOAST DE BOOTSTRAP 5 (NOTIFICACIONES NO INVASIVAS)
+         ========================================================================== -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090;">
+        <div id="toastNotificacion" class="toast align-items-center text-white bg-dark border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2" id="toastMensaje">
+                    <!-- Contenido dinámico inyectado por JavaScript -->
+                    🛒 Notificación de EriGamesStore
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar notificación"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3 JavaScript Bundle con Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Módulos JavaScript organizados por responsabilidad (Carga DOM, Carrito y Contacto) -->
+    <script src="js/dom.js"></script>
+    <script src="js/carrito.js"></script>
+    <script src="js/contacto.js"></script>
 </body>
 </html>

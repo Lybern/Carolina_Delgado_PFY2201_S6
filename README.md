@@ -1,108 +1,79 @@
-# 🎮 EriGamesStore - Optimizando un Sitio Web con HTML, CSS y Diseño Responsivo
+# 🎮 EriGamesStore - Optimizando la Lógica y Rendimiento con JavaScript y Bootstrap 5
 
 **Asignatura:** Desarrollo Frontend I (PFY2201)  
-**Institución:** Duoc UC  
-**Evaluación:** Actividad Sumativa - Semana 3 (Experiencia 1)  
+**Institución:** Duoc UC – Escuela de Informática y Telecomunicaciones  
+**Evaluación:** Actividad Sumativa – Semana 6 (Experiencia de Aprendizaje 2)  
 **Estudiante:** Carolina Delgado  
-**Repositorio GitHub:** [https://github.com/Lybern/EriGamesStore-Frontend_Exp1_Semana2](https://github.com/Lybern/EriGamesStore-Frontend_Exp1_Semana2)  
-**Sitio en Vivo (GitHub Pages):** [https://lybern.github.io/EriGamesStore-Frontend_Exp1_Semana2/](https://lybern.github.io/EriGamesStore-Frontend_Exp1_Semana2/)
+**Repositorio GitHub:** [https://github.com/Lybern/Carolina_Delgado_PFY2201_S6](https://github.com/Lybern/Carolina_Delgado_PFY2201_S6)  
+**Sitio en Vivo (GitHub Pages):** [https://lybern.github.io/Carolina_Delgado_PFY2201_S6/](https://lybern.github.io/Carolina_Delgado_PFY2201_S6/)  
 
 ---
 
-## 📌 Descripción del Proyecto
+## 📌 Descripción General del Proyecto
 
-**EriGamesStore** es una plataforma web optimizada de comercio electrónico enfocada en la venta de videojuegos, consolas de última generación y accesorios gamer en Chile.
+**EriGamesStore** es una plataforma web de comercio electrónico especializada en videojuegos, consolas y accesorios gamer. 
 
-Durante esta **Semana 3**, el sitio fue profundamente optimizado aplicando:
-1. **Modelo de Cajas (Box Model):** Dimensionamiento y espaciado consistente mediante `box-sizing: border-box`, márgenes, rellenos y bordes delimitados.
-2. **Diseño Responsivo Moderno:** Uso estratégico de **Flexbox** para componentes lineales/unidimensionales y **CSS Grid** para estructuras bidimensionales complejas.
-3. **Tipografía y Paleta Gamer:** Integración de Google Fonts (`Outfit` y `Plus Jakarta Sans`), variables CSS en `:root` y diseño de alto contraste con estética *Dark Mode Gamer*.
-4. **Selectores Avanzados:** Uso exhaustivo de pseudo-clases (`:hover`, `:active`, `:focus-visible`, `:nth-child()`), pseudo-elementos (`::before`, `::after`, `::selection`) y selectores de atributos.
-5. **Accesibilidad y Compatibilidad Multi-navegador:** Soporte con prefijos, enlaces de salto accesible (`.skip-link`), navegación por teclado y media queries para múltiples dispositivos.
+Durante esta **Semana 6**, el proyecto integró una profunda optimización combinando la potencia de **Bootstrap 5** para la maquetación responsiva y componentes de interfaz con la versatilidad de **JavaScript moderno (ES6+)** para la interactividad, manipulación dinámica del DOM, gestión de eventos y consumo asíncrono de datos mediante **Fetch API**.
 
 ---
 
-## 📋 Cumplimiento de la Pauta de Evaluación Sumativa (100 / 100 Puntos)
+## 🚀 Características Técnicas Implementadas
 
-| N° | Criterio de Evaluación | Nivel de Logro | Puntaje | Detalle de Implementación |
-|:--:|:-----------------------|:--------------:|:-------:|:--------------------------|
-| **1** | **Estructura HTML Semántica** | **Completamente Logrado (100%)** | **20 / 20** | Uso riguroso de etiquetas HTML5 (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`, `<figure>`, `<form>`, `<fieldset>`, `<legend>`, `<label>`, `<input>`, `<select>`, `<textarea>`, `<button>`, etc.) con indentación impecable y accesibilidad. |
-| **2** | **Estilos CSS con Hoja Externa** | **Completamente Logrado (100%)** | **15 / 15** | Vinculación limpia mediante `<link rel="stylesheet" href="styles.css">`, modularización de reglas, sin estilos en línea y comentarios técnicos detallados. |
-| **3** | **Modelo de Cajas (Box Model)** | **Completamente Logrado (100%)** | **15 / 15** | Reset universal con `box-sizing: border-box`, paddings calculados, márgenes proporcionales, bordes redondeados y sombras de elevación (`box-shadow`). |
-| **4** | **Esquema de Colores y Tipografía** | **Completamente Logrado (100%)** | **10 / 10** | Paleta cromática armoniosa con variables CSS (`:root`), alto contraste WCAG, tipografías `Outfit` y `Plus Jakarta Sans` con escala fluida mediante `clamp()`. |
-| **5** | **Diseño Responsivo con Flexbox y CSS Grid** | **Completamente Logrado (100%)** | **15 / 15** | **Flexbox** en cabecera, menú de navegación, botones, alineación de tarjetas y pie de página. **CSS Grid** en catálogo de productos, categorías, beneficios, contacto y footer. 4 breakpoints responsivos (`1024px`, `768px`, `540px`, `380px`). |
-| **6** | **Compatibilidad y Verificación en Navegadores** | **Completamente Logrado (100%)** | **15 / 15** | Código W3C validado, prefijos propietarios (`-webkit-backdrop-filter`), adaptación fluida y navegación sin desbordamientos horizontales. |
-| **7** | **Publicación en GitHub y Capturas de Pantalla** | **Completamente Logrado (100%)** | **10 / 10** | Repositorio público configurado, rama `gh-pages` activa para despliegue y capturas de pantalla para escritorio, tablet y móvil incluidas en la carpeta `screenshots/`. |
-| **TOTAL** | | **CALIFICACIÓN MÁXIMA** | **100 / 100** | |
+### 1. Maquetación y Componentes Responsivos con Bootstrap 5
+* **Barra de Navegación Responsiva:** Incorpora menú colapsable para dispositivos móviles con botón hamburguesa (`navbar-toggler`), enlaces con diseño interactivo, menú desplegable con categorías simuladas (*Aventura y Acción*, *Rol (RPG)*, *Deportes*, *Plataformas*, *Survival Horror*) y buscador integrado.
+* **Carrusel Hero Accesible:** 3 diapositivas destacadas en alta definición con indicadores, controles y un botón interactivo de **Pausa / Reanudación** (`#btn_pausa_carrusel`) conforme a las directrices de accesibilidad (WCAG 2.1).
+* **Panel Lateral Offcanvas para el Carrito:** Despliegue interactivo del resumen de compras sin necesidad de abandonar ni recargar la página.
+* **Adaptabilidad Multidispositivo:** Maquetación fluida y probada para pantallas de escritorio, tablets y teléfonos móviles sin desbordamientos horizontales.
 
----
+### 2. Manipulación Dinámica del DOM y Gestión de Eventos en JavaScript
+* **Separación Modular por Responsabilidad:** Código JavaScript estructurado en 3 módulos especializados:
+  * `js/dom.js`: Carga dinámica de productos con Fetch API, construcción segura de tarjetas en el DOM con `createElement`/`appendChild`, filtro en tiempo real y componentes interactivos.
+  * `js/carrito.js`: Lógica completa de compras con persistencia en `localStorage`, cálculo de totales, renderizado en panel Offcanvas y en el área designada de la página (`#contenedor-resumen-pagina`), y confirmación de eliminación.
+  * `js/contacto.js`: Validación semántica de formulario con clases nativas de Bootstrap 5 (`is-valid`, `is-invalid`, `invalid-feedback`), validación en caliente (`input`/`change`) e intercepción de `submit` con `preventDefault()`.
+* **Componente Toast de Bootstrap 5:** Notificaciones no invasivas al agregar o eliminar juegos del carrito y ante advertencias del sistema (sin recurrir a molestos `alert()`).
+* **Evento `click` (Carrito de Compras):** Cada producto cuenta con un botón interactivo que añade el ítem al carrito, genera retroalimentación visual en el botón (*¡Añadido!*), despliega el panel y actualiza el contador.
+* **Evento `submit` (Buscador y Formulario de Contacto):** Interceptación de envíos mediante `event.preventDefault()` para filtrar videojuegos o validar datos de contacto.
 
-## 🛠️ Tecnologías y Metodologías Utilizadas
+### 3. Carga de Datos Asíncrona con Fetch API y `async / await`
+* **Consumo de Archivo JSON Local:** Carga asíncrona del catálogo de videojuegos desde `data/productos.json` con manejo estructurado de errores y mensajes amigables vía Toast.
+* **Respaldo Automático:** En caso de fallas de red o ejecución directa mediante protocolo `file://`, se activa un catálogo de respaldo en memoria que garantiza la visualización continua.
 
-- **HTML5 Semántico:** Estructura limpia y accesible validada bajo estándares W3C.
-- **CSS3 Moderno:** Variables CSS (`custom properties`), gradientes lineales/radiales, filtros `backdrop-filter`.
-- **CSS Grid Layout:** Cuadrículas fluidas auto-ajustables con `repeat(auto-fit, minmax(...))`.
-- **Flexbox Layout:** Alineaciones unidimensionales flexibles y adaptables.
-- **Media Queries:** Adaptación multidispositivo para escritorio, tablet y smartphone.
-- **Google Fonts:** Tipografías web de alto rendimiento (`Outfit` y `Plus Jakarta Sans`).
-- **Git & GitHub Pages:** Control de versiones y despliegue continuo en la nube.
-
----
-
-## 📱 Capturas de Pantalla en Distintos Dispositivos
-
-### 1. Vista General en Escritorio (Desktop 1920x1080 / 1440x900)
-![Vista Escritorio](screenshots/01_vista_general_escritorio.png)
-
-### 2. Cabecera y Menú de Navegación Sticky (Flexbox)
-![Cabecera y Navegación](screenshots/02_cabecera_y_navegacion.png)
-
-### 3. Catálogo de Productos Destacados (CSS Grid & Tarjetas)
-![Productos Destacados](screenshots/03_seccion_productos_destacados.png)
-
-### 4. Categorías de Videojuegos con Acentos de Color
-![Categorías](screenshots/04_seccion_categorias.png)
-
-### 5. Vista Responsiva en Dispositivos Móviles (Mobile View)
-![Vista Móvil](screenshots/04_vista_responsiva_movil.png)
-
-### 6. Sección de Contacto con Formulario y Pie de Página
-![Pie de Página y Contacto](screenshots/06_pie_de_pagina.png)
+### 4. Persistencia en el Navegador con `localStorage`
+* **Sincronización del Carrito:** Los productos añadidos se almacenan en `localStorage` (`leerCarrito`, `guardarCarrito`, `eliminarDelCarrito`, `vaciarCarrito`), manteniendo los datos entre sesiones.
+* **Operaciones Completas:** Aumentar (+), disminuir (-), eliminar y vaciar con cálculo en tiempo real en pesos chilenos (`CLP`).
 
 ---
 
-## 📂 Estructura de Archivos del Proyecto
+## 📂 Estructura del Proyecto
 
 ```plaintext
-EriGamesStore-Frontend_Exp1_Semana2/
-├── Carolina_PFY2201_CSS_Semana3.css      # Hoja de estilos con nomenclatura de entrega AVA
-├── Carolina_PFY2201_HTML_Semana3.html    # Archivo HTML con nomenclatura de entrega AVA
-├── img/                                  # Imágenes stock locales y recursos gráficos
-│   ├── cyberpunk-2077.jpg                # Portada stock Cyberpunk 2077 Phantom Liberty
-│   ├── erigames-logo.jpg                 # Logotipo oficial de EriGamesStore
-│   ├── fc24.jpg                          # Portada stock EA Sports FC 24
-│   ├── ffvii-rebirth.jpg                 # Portada stock Final Fantasy VII Rebirth
-│   ├── mario-wonder.jpg                  # Portada stock Super Mario Bros. Wonder
-│   ├── resident-evil-4.jpg               # Portada stock Resident Evil 4 Remake
-│   └── zelda-totk.jpg                    # Portada stock The Legend of Zelda: Tears of the Kingdom
-├── index.html                            # Documento principal para GitHub Pages
-├── README.md                             # Documentación completa y verificación de pauta
-├── screenshots/                          # Capturas de pantalla para escritorio, tablet y móvil
-│   ├── 01_vista_general_escritorio.png
-│   ├── 02_cabecera_y_navegacion.png
-│   ├── 03_productos_destacados_box_model.png
-│   ├── 03_seccion_productos_destacados.png
-│   ├── 04_seccion_categorias.png
-│   ├── 04_vista_responsiva_movil.png
-│   ├── 05_captura_pagina_completa.png
-│   ├── 05_seccion_contacto.png
-│   └── 06_pie_de_pagina.png
-└── styles.css                            # Hoja de estilos principal enlazada
+Carolina_Delgado_PFY2201_S6/
+├── index.html                # Página principal del eCommerce con Bootstrap 5
+├── styles.css                # Hoja de estilos personalizada con diseño Dark Gamer
+├── data/
+│   └── productos.json        # Catálogo de videojuegos en formato JSON
+├── img/                      # Recursos visuales y carátulas de videojuegos
+│   ├── cyberpunk-2077.jpg
+│   ├── erigames-logo.jpg
+│   ├── fc24.jpg
+│   ├── ffvii-rebirth.jpg
+│   ├── mario-wonder.jpg
+│   ├── resident-evil-4.jpg
+│   └── zelda-totk.jpg
+├── js/
+│   ├── dom.js                # Carga Fetch API, renderizado y eventos de catálogo
+│   ├── carrito.js            # Lógica de compras, LocalStorage y resumen DOM
+│   ├── contacto.js           # Validación semántica con Bootstrap 5
+│   └── scripts.js            # Script unificado de respaldo
+└── README.md                 # Documentación técnica completa del proyecto
 ```
 
 ---
 
-## 🚀 Publicación y Despliegue
+## 🛠️ Tecnologías Empleadas
 
-1. **Repositorio público:** [https://github.com/Lybern/EriGamesStore-Frontend_Exp1_Semana2](https://github.com/Lybern/EriGamesStore-Frontend_Exp1_Semana2)
-2. **Visualización en línea:** [https://lybern.github.io/EriGamesStore-Frontend_Exp1_Semana2/](https://lybern.github.io/EriGamesStore-Frontend_Exp1_Semana2/)
+* **HTML5 Semántico:** Estructura limpia y accesible validada con etiquetas `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`.
+* **CSS3 Personalizado:** Variables en `:root`, Flexbox, CSS Grid, filtros de desenfoque (`backdrop-filter`) y efectos luminosos.
+* **Bootstrap 5.3:** Sistema de rejilla, barra de navegación responsiva, carrusel y panel Offcanvas.
+* **JavaScript ES6+:** Funciones flecha, desestructuración, promesas, `async / await`, `AbortController` y `localStorage`.
+* **Git & GitHub Pages:** Control de versiones y despliegue público en la nube.

@@ -305,10 +305,11 @@ nav.site-nav {
     gap: 0.75rem;
 }
 
-.nav-link {
+.site-nav .nav-link,
+.navbar-dark .navbar-nav .nav-link {
     display: inline-block;
     padding: 0.55rem 1.35rem;
-    color: var(--text-secondary);
+    color: #e2e8f0 !important;
     font-family: var(--font-heading);
     font-size: 0.95rem;
     font-weight: 600;
@@ -319,16 +320,135 @@ nav.site-nav {
     text-align: center;
 }
 
-.nav-link:hover {
-    background-color: rgba(59, 130, 246, 0.2);
-    color: var(--text-primary);
+/* Efecto hover y foco: Naranjo gamer brillante (#fb923c) de alto contraste */
+.site-nav .nav-link:hover,
+.site-nav .nav-link:focus,
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus,
+.site-nav .dropdown-toggle:hover,
+.site-nav .dropdown-toggle:focus,
+.site-nav .dropdown-toggle.show {
+    background-color: rgba(245, 158, 11, 0.22) !important;
+    color: #fb923c !important; /* Naranjo cálido brillante */
     transform: translateY(-2px);
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.35) !important;
 }
 
-.nav-link.nav-active {
-    background-color: var(--accent-blue-hover);
+.site-nav .nav-link.nav-active,
+.site-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link.active {
+    background-color: var(--accent-blue-hover) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* Acciones en la barra de navegación: Buscador y Carrito */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.nav-search-form {
+    display: flex;
+    align-items: center;
+}
+
+.nav-search-input {
+    background-color: #111a2e;
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    border: 1px solid rgba(59, 130, 246, 0.45);
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    padding: 0.48rem 0.85rem;
+    font-size: 0.88rem;
+    font-family: var(--font-body);
+    outline: none;
+    width: 170px;
+    transition: all var(--transition-fast);
+}
+
+.nav-search-input:focus {
+    border-color: var(--accent-cyan);
+    width: 200px;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+.nav-search-input::placeholder {
+    color: #94a3b8;
+}
+
+.nav-search-btn {
+    background-color: var(--accent-blue);
+    color: #ffffff;
+    border: 1px solid var(--accent-blue);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.48rem 0.85rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.nav-search-btn:hover {
+    background-color: var(--accent-blue-hover);
+}
+
+.nav-cart-btn {
+    background-color: rgba(17, 26, 46, 0.8);
+    color: #ffffff;
+    border: 1px solid var(--accent-cyan);
+    border-radius: var(--radius-sm);
+    padding: 0.48rem 0.95rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.nav-cart-btn:hover {
+    background-color: rgba(0, 240, 255, 0.18);
+    color: var(--accent-cyan);
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+}
+
+.nav-cart-badge {
+    background-color: var(--accent-red);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-full);
+}
+
+/* Estilos para el menú desplegable de categorías en la navegación */
+.dropdown-menu-dark {
+    background-color: #111a2e !important;
+    border: 1px solid rgba(59, 130, 246, 0.35) !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6) !important;
+    padding: 0.5rem 0;
+}
+
+.dropdown-menu-dark .dropdown-item {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.55rem 1.25rem;
+    transition: all var(--transition-fast);
+}
+
+.dropdown-menu-dark .dropdown-item:hover,
+.dropdown-menu-dark .dropdown-item:focus {
+    background-color: rgba(245, 158, 11, 0.22) !important;
+    color: #fb923c !important;
+    padding-left: 1.5rem;
 }
 
 /* --------------------------------------------------------------------------
@@ -1200,6 +1320,13 @@ footer.site-footer {
         font-size: 0.9rem;
     }
 
+    .nav-actions {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+
     .hero-banner {
         padding: 2.5rem 1rem;
         text-align: center;
@@ -1341,3 +1468,424 @@ footer.site-footer {
 .d-none {
     display: none !important;
 }
+
+/* --------------------------------------------------------------------------
+   17. CARRUSEL ACCESIBLE Y HERO INTERACTIVO (SEMANA 5 / 6)
+   -------------------------------------------------------------------------- */
+.hero-carousel-section {
+    background-color: #070a14;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 2.5rem;
+}
+
+.carousel-item {
+    height: 440px;
+    background-color: #070a14;
+    text-align: center;
+}
+
+.carousel-item img {
+    height: 440px;
+    width: 100%;
+    object-fit: cover;
+    filter: brightness(0.78);
+}
+
+.carousel-caption {
+    bottom: 35px;
+    left: 10%;
+    right: 10%;
+    background: rgba(10, 15, 29, 0.88);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-md);
+    padding: 18px 24px;
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.carousel-caption h2 {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-bottom: 0.35rem;
+    font-family: var(--font-heading);
+}
+
+.carousel-caption p {
+    color: #e2e8f0;
+    font-size: 0.98rem;
+    margin-bottom: 0;
+}
+
+.btn-carrusel-control {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background-color: rgba(10, 15, 29, 0.85);
+    color: #ffffff;
+    border: 1px solid var(--accent-cyan);
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    border-radius: 20px;
+    padding: 5px 14px;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-carrusel-control:hover,
+.btn-carrusel-control:focus {
+    background-color: var(--accent-cyan);
+    color: #0a0f1d;
+}
+
+@media (max-width: 768px) {
+    .carousel-item,
+    .carousel-item img {
+        height: 280px;
+    }
+    .carousel-caption {
+        bottom: 15px;
+        left: 5%;
+        right: 5%;
+        padding: 10px 14px;
+    }
+    .carousel-caption h2 {
+        font-size: 1.15rem;
+    }
+    .carousel-caption p {
+        font-size: 0.82rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   18. FILTROS RÁPIDOS Y BOTONES DE CATEGORÍA
+   -------------------------------------------------------------------------- */
+.filter-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-filtro-cat {
+    background-color: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-filtro-cat:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-blue);
+    background-color: var(--bg-card-hover);
+}
+
+.btn-filtro-cat.active {
+    background-color: var(--accent-blue);
+    color: #ffffff;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   19. PANEL DEL CARRITO DE COMPRAS (OFFCANVAS)
+   -------------------------------------------------------------------------- */
+.offcanvas.offcanvas-end {
+    background-color: #0c1222 !important;
+    color: #ffffff !important;
+    border-left: 1px solid var(--border-accent);
+}
+
+.cart-item-card {
+    background: #131c33;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cart-item-img {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.cart-item-details {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.cart-item-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cart-item-price {
+    font-size: 0.82rem;
+    color: var(--accent-green);
+    font-weight: 700;
+}
+
+@keyframes pulseBadge {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.badge-pulse {
+    animation: pulseBadge 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   20. SECCIÓN DESIGNADA: RESUMEN DEL CARRITO EN LA PÁGINA
+   -------------------------------------------------------------------------- */
+.carrito-resumen-caja {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-card);
+    margin-top: 1rem;
+}
+
+.carrito-vacio-aviso {
+    text-align: center;
+    padding: 2.5rem 1rem;
+}
+
+.carrito-tabla-contenedor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.carrito-fila-item {
+    background: #111a2e;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    transition: all var(--transition-fast);
+}
+
+.carrito-fila-item:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.carrito-fila-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
+}
+
+.carrito-fila-info {
+    flex: 1 1 200px;
+}
+
+.carrito-fila-info h4 {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    color: #ffffff;
+    margin-bottom: 0.2rem;
+}
+
+.carrito-fila-plataforma {
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+}
+
+.carrito-fila-precio {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-green);
+    min-width: 100px;
+}
+
+.carrito-fila-controles {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-qty {
+    background-color: #17223b;
+    color: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-qty:hover {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.qty-num {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    min-width: 24px;
+    text-align: center;
+}
+
+.carrito-fila-subtotal {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent-cyan);
+    min-width: 110px;
+    text-align: right;
+}
+
+.btn-eliminar-fila {
+    background: transparent;
+    color: var(--accent-red);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-eliminar-fila:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--accent-red);
+}
+
+.carrito-resumen-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.carrito-total-box {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+}
+
+.carrito-total-box span {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.total-monto {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--accent-green);
+}
+
+.carrito-acciones-box {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-vaciar-pagina {
+    background: transparent;
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-vaciar-pagina:hover {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.btn-checkout-pagina {
+    background: var(--accent-blue);
+    border: none;
+    color: #ffffff;
+    padding: 0.6rem 1.4rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font-heading);
+    transition: all var(--transition-fast);
+}
+
+.btn-checkout-pagina:hover {
+    background: var(--accent-blue-hover);
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   21. VALIDACIÓN SEMÁNTICA DE BOOTSTRAP 5 Y TOASTS EN TEMA GAMER
+   -------------------------------------------------------------------------- */
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--accent-red) !important;
+    background-color: rgba(239, 68, 68, 0.08) !important;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.3) !important;
+}
+
+.form-control.is-valid,
+.form-select.is-valid {
+    border-color: var(--accent-green) !important;
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.3) !important;
+}
+
+.invalid-feedback {
+    display: none;
+    color: #f87171 !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.35rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.is-invalid ~ .invalid-feedback {
+    display: block !important;
+}
+
+/* Estilo del Toast flotante gamer */
+.toast {
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--border-accent) !important;
+    border-radius: var(--radius-sm) !important;
+    font-family: var(--font-heading);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
