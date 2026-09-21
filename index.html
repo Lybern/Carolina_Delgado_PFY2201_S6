@@ -36,7 +36,7 @@
     <header id="inicio" class="site-header">
         <div class="header-container">
             <div class="header-brand">
-                <img class="header-logo" src="img/erigames-logo.jpg" alt="Logotipo oficial de EriGamesStore" width="90" height="90">
+                <img class="header-logo" src="img/erigames-logo.jpg" alt="Logotipo oficial de EriGamesStore" width="95" height="95">
                 <div class="header-text">
                     <h1>EriGamesStore</h1>
                     <p class="header-tagline">Tu tienda gamer favorita con los mejores videojuegos, consolas y accesorios al mejor precio.</p>
@@ -45,6 +45,7 @@
             <div class="header-badges" aria-label="Destacados de la tienda">
                 <span class="badge-chip badge-shipping">🚚 Envíos a todo Chile</span>
                 <span class="badge-chip badge-warranty">🛡️ Garantía Oficial</span>
+                <span class="badge-chip badge-support">⚡ Despacho Rápido</span>
             </div>
         </div>
     </header>
@@ -189,28 +190,28 @@
 
         <!-- SECCIÓN DE BIENVENIDA Y OFERTAS -->
         <section class="section-block" aria-label="Ofertas y promociones gamer" style="padding-bottom: 0;">
-            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-left: 5px solid var(--accent-gold); border-radius: var(--radius-md); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                    <div>
-                        <h2 style="font-size: 1.4rem; color: #ffffff; margin-bottom: 0.25rem;">🎮 Catálogo Oficial EriGamesStore</h2>
-                        <p id="lead_info" style="color: var(--text-muted); margin: 0;">
+            <div class="banner-catalogo-bienvenida">
+                <div class="banner-catalogo-contenido">
+                    <div class="banner-catalogo-texto">
+                        <h2 class="banner-catalogo-titulo">🎮 Catálogo Oficial EriGamesStore</h2>
+                        <p id="lead_info" class="banner-catalogo-subtitulo">
                             Explora nuestra selección especial de videojuegos recomendados con despacho prioritario en Chile.
                         </p>
                     </div>
-                    <div>
-                        <button type="button" class="btn" id="boton_ofertas" style="white-space: nowrap; font-weight: 700; background: var(--accent-gold); color: #0f172a; border: none; padding: 0.65rem 1.3rem; border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-heading);">
+                    <div class="banner-catalogo-accion">
+                        <button type="button" class="btn btn-ofertas-destacado" id="boton_ofertas">
                             🔥 Ver Ofertas Especiales
                         </button>
                     </div>
                 </div>
 
                 <!-- Cuadro de ofertas desplegable dinámicamente con JS -->
-                <div id="seccion_ofertas" class="d-none" style="margin-top: 0.5rem; padding: 1.25rem; border-radius: var(--radius-sm); background: rgba(245, 158, 11, 0.1); border: 1px dashed var(--accent-gold); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div id="seccion_ofertas" class="d-none seccion-ofertas-caja">
                     <div>
-                        <h3 style="color: var(--accent-gold); font-size: 1.1rem; margin-bottom: 0.25rem;">🎉 ¡Descuentos de la Semana para Gamers!</h3>
-                        <p style="color: var(--text-secondary); margin: 0; font-size: 0.95rem;">Aprovecha hasta un <strong>30% de descuento adicional</strong> en títulos seleccionados para Nintendo Switch, PS5 y Xbox.</p>
+                        <h3 style="color: var(--accent-gold); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; font-family: var(--font-heading);">🎉 ¡Descuentos de la Semana para Gamers!</h3>
+                        <p style="color: #e2e8f0; margin: 0; font-size: 0.98rem; font-weight: 500;">Aprovecha hasta un <strong>30% de descuento adicional</strong> en títulos seleccionados para Nintendo Switch, PS5 y Xbox.</p>
                     </div>
-                    <span class="badge" style="position: static; background: var(--accent-red); color: #ffffff; padding: 0.4rem 0.8rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem;">Válido hasta agotar stock</span>
+                    <span class="badge" style="position: static; background: var(--accent-red); color: #ffffff; padding: 0.45rem 0.9rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem;">Válido hasta agotar stock</span>
                 </div>
             </div>
         </section>
