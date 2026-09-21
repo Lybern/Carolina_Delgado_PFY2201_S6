@@ -332,14 +332,18 @@ nav.site-nav {
 }
 
 .nav-brand-img {
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
-    transition: transform var(--transition-fast);
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .nav-brand-compact:hover .nav-brand-img {
-    transform: scale(1.08) rotate(-4deg);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.75);
 }
 
 .nav-brand-title {
