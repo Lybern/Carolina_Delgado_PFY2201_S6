@@ -16,7 +16,7 @@
 let carritoCompras = [];
 
 // ==============================================================================
-// 1. PERSISTENCIA CON LOCALSTORAGE (MÉTODOS VISTOS EN CLASE)
+// 1. PERSISTENCIA CON LOCALSTORAGE 
 // ==============================================================================
 
 /**
