@@ -465,7 +465,12 @@ function eliminarDelCarrito(prodId) {
 function vaciarCarrito() {
   if (carritoCompras.length === 0) return;
   carritoCompras = [];
-  guardarCarrito();
+  try {
+    localStorage.removeItem("erigames_carrito");
+  } catch (error) {
+    console.warn("Error al remover de localStorage:", error);
+  }
+  actualizarVistaCarrito();
 }
 
 /**

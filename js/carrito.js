@@ -153,7 +153,12 @@ function vaciarCarrito(pedirConfirmacion = false) {
   }
 
   carritoCompras = [];
-  guardarCarrito();
+  try {
+    localStorage.removeItem("erigames_carrito");
+  } catch (error) {
+    console.warn("Error al remover de localStorage:", error);
+  }
+  actualizarVistaCarrito();
 
   if (typeof mostrarToast === "function") {
     mostrarToast("El carrito de compras ha sido vaciado.", "info");
