@@ -1,0 +1,116 @@
+[
+  {
+    "id": "prod-1",
+    "nombre": "The Legend of Zelda: Tears of the Kingdom",
+    "categoria": "Aventura y Acción",
+    "plataforma": "Nintendo Switch",
+    "badge": "⭐ Más Vendido",
+    "badgeColor": "primary",
+    "descripcion": "Explora los cielos y las profundidades de Hyrule en una inolvidable travesía llena de misterios, templos y libertad creativa total.",
+    "precio": 54990,
+    "stock": 15,
+    "imagen": {
+      "src": "img/zelda-totk.jpg",
+      "alt": "Portada de The Legend of Zelda: Tears of the Kingdom"
+    },
+    "boton": {
+      "texto": "🛒 Añadir al Carrito",
+      "url": "#"
+    }
+  },
+  {
+    "id": "prod-2",
+    "nombre": "Cyberpunk 2077: Phantom Liberty",
+    "categoria": "Rol (RPG)",
+    "plataforma": "PS5 / PC / Xbox",
+    "badge": "🔥 Expansión Top",
+    "badgeColor": "danger",
+    "descripcion": "Sumérgete en el peligroso distrito de Dogtown en Night City con Keanu Reeves e Idris Elba en un thriller de espionaje futurista de alto calibre.",
+    "precio": 49990,
+    "stock": 20,
+    "imagen": {
+      "src": "img/cyberpunk-2077.jpg",
+      "alt": "Portada de Cyberpunk 2077 Phantom Liberty"
+    },
+    "boton": {
+      "texto": "🛒 Añadir al Carrito",
+      "url": "#"
+    }
+  },
+  {
+    "id": "prod-3",
+    "nombre": "Super Mario Bros. Wonder",
+    "categoria": "Plataformas",
+    "plataforma": "Nintendo Switch",
+    "badge": "✨ Novedad",
+    "badgeColor": "warning",
+    "descripcion": "Disfruta de la magia clásica de plataformas con asombrosos efectos Maravilla, nuevos potenciadores y modo multijugador cooperativo lleno de diversión.",
+    "precio": 44990,
+    "stock": 18,
+    "imagen": {
+      "src": "img/mario-wonder.jpg",
+      "alt": "Portada de Super Mario Bros Wonder"
+    },
+    "boton": {
+      "texto": "🛒 Añadir al Carrito",
+      "url": "#"
+    }
+  },
+  {
+    "id": "prod-4",
+    "nombre": "EA Sports FC 24",
+    "categoria": "Deportes",
+    "plataforma": "PS5 / Xbox / PC",
+    "badge": "🏆 Éxito Mundial",
+    "badgeColor": "success",
+    "descripcion": "Vive el realismo definitivo del fútbol mundial con tecnología HyperMotionV, PlayStyles optimizados por Opta y los modos Ultimate Team y Carrera.",
+    "precio": 39990,
+    "stock": 25,
+    "imagen": {
+      "src": "img/fc24.jpg",
+      "alt": "Portada de EA Sports FC 24"
+    },
+    "boton": {
+      "texto": "🛒 Añadir al Carrito",
+      "url": "#"
+    }
+  },
+  {
+    "id": "prod-5",
+    "nombre": "Resident Evil 4 Remake",
+    "categoria": "Survival Horror",
+    "plataforma": "PS5 / PS4 / PC",
+    "badge": "💀 Survival Horror",
+    "badgeColor": "dark",
+    "descripcion": "Sobrevive a una pesadilla biológica en un recóndito pueblo europeo con gráficos hiperrealistas RE Engine, combates viscerales y tensión constante.",
+    "precio": 42990,
+    "stock": 12,
+    "imagen": {
+      "src": "img/resident-evil-4.jpg",
+      "alt": "Portada de Resident Evil 4 Remake"
+    },
+    "boton": {
+      "texto": "🛒 Añadir al Carrito",
+      "url": "#"
+    }
+  },
+  {
+    "id": "prod-6",
+    "nombre": "Final Fantasy VII Rebirth",
+    "categoria": "Rol (RPG)",
+    "plataforma": "PlayStation 5",
+    "badge": "🌟 Aclamado",
+    "badgeColor": "info",
+    "descripcion": "La inolvidable odisea de Cloud, Tifa y Aerith continúa fuera de Midgar a través de un vasto mundo abierto con combates cinemáticos electrizantes.",
+    "precio": 59990,
+    "stock": 10,
+    "imagen": {
+      "src": "img/ffvii-rebirth.jpg",
+      "alt": "Portada de Final Fantasy VII Rebirth"
+    },
+    "boton": {
+      "texto": "🛒 Añadir al Carrito",
+      "url": "#"
+    }
+  }
+]
