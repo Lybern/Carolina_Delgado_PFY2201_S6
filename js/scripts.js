@@ -265,10 +265,70 @@ function configurarEventosMouseMenu() {
   });
 }
 
+// ==============================================================================
+// PASO 6: GESTIÓN DE EVENTOS - SUBMIT CON PREVENTDEFAULT() Y VALIDACIÓN DOM
+// ==============================================================================
+
+/**
+ * Intercepta el evento 'submit' del formulario de contacto para evitar la recarga
+ * del navegador con preventDefault(), valida los campos y despliega feedback en el DOM.
+ */
+function configurarEventoSubmitFormulario() {
+  const formContacto = document.getElementById("form_contacto");
+  const cajaMensaje = document.getElementById("mensaje_estado");
+
+  if (!formContacto || !cajaMensaje) return;
+
+  formContacto.addEventListener("submit", (evento) => {
+    evento.preventDefault(); // Detiene la recarga por defecto obligatoria
+
+    const inputNombre = document.getElementById("nombre").value.trim();
+    const inputCorreo = document.getElementById("email").value.trim();
+    const inputMotivo = document.getElementById("motivo").value;
+    const inputMensaje = document.getElementById("mensaje").value.trim();
+
+    // 1. Validación de campos requeridos
+    if (inputNombre === "" || inputCorreo === "" || inputMotivo === "" || inputMensaje === "") {
+      cajaMensaje.style.display = "block";
+      cajaMensaje.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
+      cajaMensaje.style.border = "1px solid var(--accent-red)";
+      cajaMensaje.style.color = "#ffffff";
+      cajaMensaje.textContent = "⚠️ Debe completar todos los campos del formulario.";
+      return;
+    }
+
+    // 2. Validación básica de formato de correo electrónico
+    if (!inputCorreo.includes("@") || !inputCorreo.includes(".")) {
+      cajaMensaje.style.display = "block";
+      cajaMensaje.style.backgroundColor = "rgba(245, 158, 11, 0.15)";
+      cajaMensaje.style.border = "1px solid var(--accent-gold)";
+      cajaMensaje.style.color = "#ffffff";
+      cajaMensaje.textContent = "⚠️ Por favor, ingrese un correo electrónico válido.";
+      return;
+    }
+
+    // 3. Despliegue de mensaje de éxito dinámico en el DOM
+    cajaMensaje.style.display = "block";
+    cajaMensaje.style.backgroundColor = "rgba(16, 185, 129, 0.15)";
+    cajaMensaje.style.border = "1px solid var(--accent-green)";
+    cajaMensaje.style.color = "#ffffff";
+    cajaMensaje.textContent = `✅ ¡Mensaje enviado con éxito, ${inputNombre}! Nos comunicaremos a ${inputCorreo} a la brevedad.`;
+
+    // 4. Restablecer los campos del formulario
+    formContacto.reset();
+
+    // 5. Ocultar mensaje tras 6 segundos
+    setTimeout(() => {
+      cajaMensaje.style.display = "none";
+    }, 6000);
+  });
+}
+
 // Punto de entrada seguro
 document.addEventListener("DOMContentLoaded", () => {
   cargarProductos();
   configurarEventoOfertas();
   configurarEventosMouseMenu();
+  configurarEventoSubmitFormulario();
 });
 

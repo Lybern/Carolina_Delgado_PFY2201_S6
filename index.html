@@ -267,7 +267,10 @@
 
                 <!-- Columna 2: Formulario de Contacto Semántico -->
                 <div class="contact-form-panel">
-                    <form class="contact-form" action="#contacto" method="get">
+                    <!-- Mensaje de estado dinámico controlado por JavaScript (Paso 6) -->
+                    <div id="mensaje_estado" role="alert" style="display: none; padding: 1rem; margin-bottom: 1.25rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem;"></div>
+
+                    <form id="form_contacto" class="contact-form" novalidate>
                         <fieldset>
                             <legend>Envíanos un mensaje</legend>
                             <div class="form-group">
