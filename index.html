@@ -276,23 +276,28 @@
                             <div class="form-group">
                                 <label for="nombre">Nombre completo:</label>
                                 <input type="text" id="nombre" name="nombre" placeholder="Ej: Carolina Delgado" required>
+                                <span class="error-inline" id="error_nombre" style="display: none; color: var(--accent-red); font-size: 0.82rem; margin-top: 0.25rem;"></span>
                             </div>
                             <div class="form-group">
                                 <label for="email">Correo electrónico:</label>
                                 <input type="email" id="email" name="email" placeholder="nombre@correo.com" required>
+                                <span class="error-inline" id="error_email" style="display: none; color: var(--accent-red); font-size: 0.82rem; margin-top: 0.25rem;"></span>
                             </div>
                             <div class="form-group">
                                 <label for="motivo">Motivo de consulta:</label>
-                                <select id="motivo" name="motivo">
+                                <select id="motivo" name="motivo" required>
+                                    <option value="" selected disabled>Selecciona una opción</option>
                                     <option value="consulta">Consulta de stock y precios</option>
                                     <option value="compra">Cotización para compra</option>
                                     <option value="envio">Estado de despacho</option>
                                     <option value="soporte">Garantía y soporte técnico</option>
                                 </select>
+                                <span class="error-inline" id="error_motivo" style="display: none; color: var(--accent-red); font-size: 0.82rem; margin-top: 0.25rem;"></span>
                             </div>
                             <div class="form-group">
                                 <label for="mensaje">Mensaje:</label>
                                 <textarea id="mensaje" name="mensaje" rows="4" placeholder="Escribe tu consulta o requerimiento aquí..." required></textarea>
+                                <span class="error-inline" id="error_mensaje" style="display: none; color: var(--accent-red); font-size: 0.82rem; margin-top: 0.25rem;"></span>
                             </div>
                             <button type="submit" class="btn btn-submit">Enviar Mensaje</button>
                         </fieldset>

@@ -1,77 +1,132 @@
 /**
  * ==============================================================================
- * ERIGAMESSTORE - LÓGICA DE JAVASCRIPT (ES6+)
+ * ERIGAMESSTORE - LÓGICA DE JAVASCRIPT MODULAR (ES6+)
  * Asignatura: Desarrollo Frontend I (PFY2201)
  * Estudiante: Carolina Delgado | Duoc UC
  * ==============================================================================
  */
 
 // ==============================================================================
-// 1. ESTADO GLOBAL
-// ==============================================================================
-let productosCatalogo = [];
-
-// ==============================================================================
-// PASO 2: MANIPULACIÓN DINÁMICA DEL DOM (createElement, appendChild y textContent)
+// 1. ESTADO GLOBAL DE LA APLICACIÓN
 // ==============================================================================
 
 /**
- * Construye de forma modular y programática la tarjeta de un videojuego en el DOM.
- * Aplica el principio de seguridad anti-XSS usando textContent para insertar textos.
+ * Catálogo general de videojuegos obtenidos asincrónicamente.
+ * @type {Array<Object>}
+ */
+let productosCatalogo = [];
+
+/**
+ * Contador de reintentos para la solicitud asíncrona de datos.
+ * @type {number}
+ */
+let intentosCarga = 0;
+
+/**
+ * Límite máximo de reintentos permitidos para la solicitud Fetch.
+ * @constant {number}
+ */
+const MAX_INTENTOS_FETCH = 3;
+
+/**
+ * Tiempo límite en milisegundos para abortar solicitudes lentas.
+ * @constant {number}
+ */
+const TIMEOUT_FETCH_MS = 7000;
+
+// ==============================================================================
+// 2. UTILIDADES Y FUNCIONES REUTILIZABLES (HELPERS)
+// ==============================================================================
+
+/**
+ * Formatea un valor numérico a moneda local chilena (CLP).
+ * Centraliza la presentación uniforme de precios en toda la interfaz.
  * 
- * @param {Object} prod - Objeto de datos del videojuego.
- * @returns {HTMLElement} Elemento <article> completamente ensamblado.
+ * @param {number|string} precio - Monto numérico a formatear.
+ * @returns {string} Cadena formateada (ej: "$54.990 CLP").
+ */
+function formatearPrecioCLP(precio) {
+  return `$${Number(precio).toLocaleString("es-CL")} CLP`;
+}
+
+/**
+ * Genera un nodo de insignia (badge) configurado de manera programática y segura.
+ * 
+ * @param {string} texto - Contenido textual de la insignia.
+ * @param {string} claseColor - Clase CSS contextual para el diseño visual.
+ * @returns {HTMLSpanElement} Elemento <span> ensamblado.
+ */
+function crearBadge(texto, claseColor = "badge-featured") {
+  const badge = document.createElement("span");
+  badge.classList.add("badge", claseColor);
+  badge.textContent = texto; // Protección anti-XSS
+  return badge;
+}
+
+/**
+ * Crea un elemento HTML con asignación de contenido textual y clases CSS en un solo paso.
+ * 
+ * @param {string} etiqueta - Nombre de la etiqueta HTML (ej: 'h3', 'p', 'span').
+ * @param {string} [texto=""] - Contenido textual asignado mediante textContent.
+ * @param {...string} clases - Clases CSS aplicadas al elemento.
+ * @returns {HTMLElement} Elemento DOM configurado.
+ */
+function crearNodoTexto(etiqueta, texto = "", ...clases) {
+  const nodo = document.createElement(etiqueta);
+  if (texto) {
+    nodo.textContent = texto;
+  }
+  if (clases.length > 0) {
+    nodo.classList.add(...clases);
+  }
+  return nodo;
+}
+
+// ==============================================================================
+// 3. MANIPULACIÓN DINÁMICA DEL DOM (createElement y appendChild)
+// ==============================================================================
+
+/**
+ * Construye de forma modular la tarjeta de un videojuego en el DOM.
+ * Utiliza utilidades centralizadas y asegura la protección de datos con textContent.
+ * 
+ * @param {Object} prod - Datos del videojuego desde el archivo JSON.
+ * @returns {HTMLElement} Elemento <article> ensamblado.
  */
 function crearTarjetaProducto(prod) {
-  // 1. Elemento contenedor <article>
   const articulo = document.createElement("article");
   articulo.classList.add("product-card");
 
-  // 2. Contenedor multimedia <div class="card-media">
+  // 1. Contenedor multimedia <div class="card-media">
   const media = document.createElement("div");
   media.classList.add("card-media");
 
-  // Badge promocional (ej: ⭐ Más Vendido)
-  const badgePromo = document.createElement("span");
-  badgePromo.classList.add("badge", "badge-featured");
-  badgePromo.textContent = prod.badge || "Destacado";
+  const badgePromo = crearBadge(prod.badge || "Destacado", "badge-featured");
+  const badgePlataforma = crearBadge(prod.plataforma || "Multiplataforma", "platform-tag");
 
-  // Imagen del videojuego
   const img = document.createElement("img");
   img.src = prod.imagen.src;
   img.alt = prod.imagen.alt || `Portada de ${prod.nombre}`;
   img.classList.add("product-img");
   img.setAttribute("loading", "lazy");
 
-  // Badge de plataforma (ej: Nintendo Switch / PS5)
-  const badgePlataforma = document.createElement("span");
-  badgePlataforma.classList.add("platform-tag");
-  badgePlataforma.textContent = prod.plataforma || "Multiplataforma";
-
   media.appendChild(badgePromo);
   media.appendChild(img);
   media.appendChild(badgePlataforma);
 
-  // 3. Cuerpo de la tarjeta <div class="product-body">
+  // 2. Cuerpo de la tarjeta <div class="product-body">
   const cuerpo = document.createElement("div");
   cuerpo.classList.add("product-body");
 
-  // Título del juego (seguro con textContent)
-  const titulo = document.createElement("h3");
-  titulo.textContent = prod.nombre;
+  const titulo = crearNodoTexto("h3", prod.nombre);
 
-  // Género o Categoría
   const genero = document.createElement("p");
   genero.classList.add("product-genre");
-  const generoStrong = document.createElement("strong");
-  generoStrong.textContent = "Categoría: ";
-  genero.appendChild(generoStrong);
+  const generoLabel = crearNodoTexto("strong", "Categoría: ");
+  genero.appendChild(generoLabel);
   genero.appendChild(document.createTextNode(prod.categoria));
 
-  // Descripción textual
-  const descripcion = document.createElement("p");
-  descripcion.classList.add("product-desc");
-  descripcion.textContent = prod.descripcion;
+  const descripcion = crearNodoTexto("p", prod.descripcion, "product-desc");
 
   // Caja de precio y stock
   const priceBox = document.createElement("div");
@@ -80,34 +135,23 @@ function crearTarjetaProducto(prod) {
   const priceData = document.createElement("div");
   priceData.classList.add("price-data");
 
-  const priceLabel = document.createElement("span");
-  priceLabel.classList.add("price-label");
-  priceLabel.textContent = "Precio especial";
-
-  const priceVal = document.createElement("p");
-  priceVal.classList.add("product-price");
-  priceVal.textContent = `$${prod.precio.toLocaleString("es-CL")} `;
-  const priceCurrency = document.createElement("small");
-  priceCurrency.textContent = "CLP";
-  priceVal.appendChild(priceCurrency);
+  const priceLabel = crearNodoTexto("span", "Precio especial", "price-label");
+  const priceVal = crearNodoTexto("p", formatearPrecioCLP(prod.precio), "product-price");
 
   priceData.appendChild(priceLabel);
   priceData.appendChild(priceVal);
 
-  const stockBadge = document.createElement("span");
-  stockBadge.classList.add("stock-badge", "stock-available");
-  stockBadge.textContent = "✓ En Stock";
+  const stockBadge = crearNodoTexto("span", "✓ En Stock", "stock-badge", "stock-available");
 
   priceBox.appendChild(priceData);
   priceBox.appendChild(stockBadge);
 
-  // Botón de acción (Añadir al Carrito)
+  // Botón de acción con microinteracción visual
   const botonComprar = document.createElement("button");
   botonComprar.type = "button";
   botonComprar.classList.add("btn-buy");
   botonComprar.textContent = "🛒 Añadir al Carrito";
 
-  // PASO 5: Microinteracción visual con evento click y temporizador setTimeout
   botonComprar.addEventListener("click", () => {
     const textoPrevio = botonComprar.textContent;
     botonComprar.textContent = "✅ ¡Añadido!";
@@ -123,7 +167,7 @@ function crearTarjetaProducto(prod) {
     }, 1500);
   });
 
-  // 4. Ensamblaje con appendChild
+  // Ensamblaje ordenado con appendChild
   cuerpo.appendChild(titulo);
   cuerpo.appendChild(genero);
   cuerpo.appendChild(descripcion);
@@ -137,17 +181,15 @@ function crearTarjetaProducto(prod) {
 }
 
 /**
- * Renderiza la lista completa de videojuegos dentro del contenedor del DOM.
- * @param {Array<Object>} productos - Lista de videojuegos.
+ * Renderiza el conjunto de videojuegos en el contenedor principal del DOM.
+ * @param {Array<Object>} productos - Arreglo de videojuegos a desplegar.
  */
 function mostrarProductos(productos) {
   const contenedor = document.getElementById("contenedor_productos");
   if (!contenedor) return;
 
-  // Limpiar el contenedor (elimina el spinner de carga)
   contenedor.innerHTML = "";
 
-  // Construir e insertar programáticamente cada producto
   productos.forEach((prod) => {
     const tarjeta = crearTarjetaProducto(prod);
     contenedor.appendChild(tarjeta);
@@ -155,58 +197,84 @@ function mostrarProductos(productos) {
 }
 
 // ==============================================================================
-// PASO 1: CONSUMO ASÍNCRONO CON FETCH API Y PROMESAS
+// 4. CONSUMO ASÍNCRONO CON FETCH API (TIMEOUTS Y REINTENTOS CONTROLADOS)
 // ==============================================================================
 
 /**
- * Carga el catálogo de productos desde un archivo JSON local utilizando Fetch API.
- * Gestiona el ciclo de vida de promesas con .then() y .catch(), mostrando un spinner mientras espera.
+ * Carga el catálogo de productos con control de tiempo de espera y reintentos limitados.
+ * Utiliza AbortController para prevenir solicitudes colgadas y despliega orientación interactiva.
  */
 function cargarProductos() {
   const contenedor = document.getElementById("contenedor_productos");
   if (!contenedor) return;
 
-  // Mostrar indicador visual de carga (Spinner)
+  intentosCarga++;
+
+  // Indicador de carga con retroalimentación del intento actual
   contenedor.innerHTML = `
     <div class="spinner-caja" id="spinner_carga" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
       <div class="spinner-gamer" role="status" aria-label="Cargando catálogo"></div>
-      <p style="color: var(--text-muted); margin-top: 1rem; font-weight: 600;">Cargando catálogo oficial de videojuegos...</p>
+      <p style="color: var(--text-muted); margin-top: 1rem; font-weight: 600;">
+        Cargando catálogo oficial de videojuegos... (Intento ${intentosCarga} de ${MAX_INTENTOS_FETCH})
+      </p>
     </div>
   `;
 
-  // Solicitud asíncrona con Fetch API
-  fetch("data/productos.json")
+  // Configuración de AbortController para control de timeout
+  const controlador = new AbortController();
+  const temporizadorId = setTimeout(() => {
+    controlador.abort();
+  }, TIMEOUT_FETCH_MS);
+
+  fetch("data/productos.json", { signal: controlador.signal })
     .then((respuesta) => {
-      // Validación del estado de la respuesta HTTP
+      clearTimeout(temporizadorId);
       if (!respuesta.ok) {
-        throw new Error(`Error en el servidor: HTTP ${respuesta.status}`);
+        throw new Error(`Error HTTP: ${respuesta.status}`);
       }
-      return respuesta.json(); // Convierte texto a objeto JSON
+      return respuesta.json();
     })
     .then((datos) => {
+      intentosCarga = 0; // Restablecer contador tras éxito
       productosCatalogo = datos;
-      console.log(`Catálogo cargado con éxito: ${datos.length} videojuegos listos.`);
+      console.log(`Catálogo cargado exitosamente: ${datos.length} títulos listos.`);
       mostrarProductos(productosCatalogo);
     })
     .catch((error) => {
-      // Manejo amigable de errores en la interfaz de usuario
-      console.error("Error al cargar productos con Fetch API:", error);
+      clearTimeout(temporizadorId);
+      console.error("Fallo en la carga de datos:", error);
+
+      const esTimeout = error.name === "AbortError";
+      const mensajeDetalle = esTimeout
+        ? "El servidor superó el tiempo máximo de espera sin responder."
+        : "No fue posible acceder al archivo de datos 'data/productos.json'.";
+
+      // Botón interactivo de reintento si no se ha alcanzado el límite
+      const accionReintento = intentosCarga < MAX_INTENTOS_FETCH
+        ? `<button type="button" class="btn btn-primary" onclick="cargarProductos()" style="margin-top: 1rem; font-weight: bold; cursor: pointer; padding: 0.6rem 1.4rem; border-radius: var(--radius-sm); border: none; background: var(--accent-blue); color: #ffffff;">
+             🔄 Reintentar Carga (${intentosCarga}/${MAX_INTENTOS_FETCH})
+           </button>`
+        : `<p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.75rem;">
+             Límite de ${MAX_INTENTOS_FETCH} intentos alcanzado. Inicia un servidor local (Live Server o python -m http.server).
+           </p>`;
+
       contenedor.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-          <p style="color: var(--accent-red); font-weight: bold; font-size: 1.1rem;">⚠️ No se pudo cargar el catálogo de videojuegos.</p>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Por favor, revisa la conexión o ejecuta el sitio desde un servidor local.</p>
+        <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem; background: var(--bg-card); border: 1px solid var(--accent-red); border-radius: var(--radius-md);">
+          <p style="font-size: 2rem; margin-bottom: 0.5rem;">⚠️</p>
+          <h4 style="color: var(--accent-red); margin-bottom: 0.5rem; font-size: 1.25rem;">No se pudo cargar el catálogo</h4>
+          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto; font-size: 0.95rem;">${mensajeDetalle}</p>
+          ${accionReintento}
         </div>
       `;
     });
 }
 
 // ==============================================================================
-// PASO 3: GESTIÓN DE EVENTOS - EVENTO CLICK (OFERTAS ESPECIALES)
+// 5. GESTIÓN DE EVENTOS E INTERACTIVIDAD
 // ==============================================================================
 
 /**
- * Configura el evento 'click' para mostrar u ocultar la sección de ofertas especiales.
- * Alterna la clase 'd-none' y actualiza el texto del botón dinámicamente.
+ * Configura el evento 'click' para alternar la visibilidad del bloque de ofertas.
  */
 function configurarEventoOfertas() {
   const botonOfertas = document.getElementById("boton_ofertas");
@@ -215,24 +283,17 @@ function configurarEventoOfertas() {
   if (!botonOfertas || !seccionOfertas) return;
 
   botonOfertas.addEventListener("click", () => {
-    // Alternar visibilidad con toggle
     seccionOfertas.classList.toggle("d-none");
     const estaOculta = seccionOfertas.classList.contains("d-none");
 
-    // Feedback dinámico en el texto del botón
     botonOfertas.textContent = estaOculta
       ? "🔥 Ver Ofertas Especiales"
       : "❌ Ocultar Ofertas";
   });
 }
 
-// ==============================================================================
-// PASO 4: GESTIÓN DE EVENTOS - MOUSEOVER Y MOUSEOUT (GUÍA DINÁMICA DE USUARIO)
-// ==============================================================================
-
 /**
- * Configura los eventos 'mouseover' y 'mouseout' sobre los enlaces de navegación.
- * Modifica el texto en #lead_info dinámicamente como guía interactiva para el usuario.
+ * Configura eventos 'mouseover' y 'mouseout' en los enlaces del menú para orientar al usuario.
  */
 function configurarEventosMouseMenu() {
   const leadInfo = document.getElementById("lead_info");
@@ -265,13 +326,9 @@ function configurarEventosMouseMenu() {
   });
 }
 
-// ==============================================================================
-// PASO 6: GESTIÓN DE EVENTOS - SUBMIT CON PREVENTDEFAULT() Y VALIDACIÓN DOM
-// ==============================================================================
-
 /**
- * Intercepta el evento 'submit' del formulario de contacto para evitar la recarga
- * del navegador con preventDefault(), valida los campos y despliega feedback en el DOM.
+ * Valida el formulario de contacto mediante expresiones regulares y retroalimentación inline.
+ * Intercepta el envío con preventDefault() y posiciona el foco en el primer campo inválido.
  */
 function configurarEventoSubmitFormulario() {
   const formContacto = document.getElementById("form_contacto");
@@ -279,45 +336,92 @@ function configurarEventoSubmitFormulario() {
 
   if (!formContacto || !cajaMensaje) return;
 
+  /**
+   * Muestra o limpia la retroalimentación visual inline en un campo específico.
+   * @param {string} inputId - Identificador del campo input/select/textarea.
+   * @param {string} errorId - Identificador del elemento de error inline.
+   * @param {string|null} mensajeError - Mensaje a desplegar, o null si es válido.
+   */
+  function actualizarEstadoCampo(inputId, errorId, mensajeError) {
+    const input = document.getElementById(inputId);
+    const spanError = document.getElementById(errorId);
+    if (!input || !spanError) return;
+
+    if (mensajeError) {
+      spanError.textContent = mensajeError;
+      spanError.style.display = "block";
+      input.style.borderColor = "var(--accent-red)";
+    } else {
+      spanError.textContent = "";
+      spanError.style.display = "none";
+      input.style.borderColor = "var(--accent-green)";
+    }
+  }
+
   formContacto.addEventListener("submit", (evento) => {
-    evento.preventDefault(); // Detiene la recarga por defecto obligatoria
+    evento.preventDefault(); // Detener recarga por defecto
 
-    const inputNombre = document.getElementById("nombre").value.trim();
-    const inputCorreo = document.getElementById("email").value.trim();
-    const inputMotivo = document.getElementById("motivo").value;
-    const inputMensaje = document.getElementById("mensaje").value.trim();
+    const inputNombre = document.getElementById("nombre");
+    const inputEmail = document.getElementById("email");
+    const selectMotivo = document.getElementById("motivo");
+    const inputMensaje = document.getElementById("mensaje");
 
-    // 1. Validación de campos requeridos
-    if (inputNombre === "" || inputCorreo === "" || inputMotivo === "" || inputMensaje === "") {
-      cajaMensaje.style.display = "block";
-      cajaMensaje.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
-      cajaMensaje.style.border = "1px solid var(--accent-red)";
-      cajaMensaje.style.color = "#ffffff";
-      cajaMensaje.textContent = "⚠️ Debe completar todos los campos del formulario.";
+    let primerCampoInvalido = null;
+
+    // 1. Validación de nombre con expresión regular (alfabético, tildes, mínimo 3 caracteres)
+    const regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,50}$/;
+    if (!regexNombre.test(inputNombre.value.trim())) {
+      actualizarEstadoCampo("nombre", "error_nombre", "Ingresa tu nombre (mínimo 3 letras, sin números ni símbolos).");
+      if (!primerCampoInvalido) primerCampoInvalido = inputNombre;
+    } else {
+      actualizarEstadoCampo("nombre", "error_nombre", null);
+    }
+
+    // 2. Validación de correo con expresión regular robusta (usuario@dominio.extension)
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!regexEmail.test(inputEmail.value.trim())) {
+      actualizarEstadoCampo("email", "error_email", "Ingresa un correo electrónico válido (ejemplo: usuario@correo.com).");
+      if (!primerCampoInvalido) primerCampoInvalido = inputEmail;
+    } else {
+      actualizarEstadoCampo("email", "error_email", null);
+    }
+
+    // 3. Validación de selección de motivo
+    if (selectMotivo.value === "") {
+      actualizarEstadoCampo("motivo", "error_motivo", "Selecciona una opción de la lista.");
+      if (!primerCampoInvalido) primerCampoInvalido = selectMotivo;
+    } else {
+      actualizarEstadoCampo("motivo", "error_motivo", null);
+    }
+
+    // 4. Validación de mensaje (mínimo 10 caracteres)
+    if (inputMensaje.value.trim().length < 10) {
+      actualizarEstadoCampo("mensaje", "error_mensaje", "El mensaje debe contener al menos 10 caracteres explicativos.");
+      if (!primerCampoInvalido) primerCampoInvalido = inputMensaje;
+    } else {
+      actualizarEstadoCampo("mensaje", "error_mensaje", null);
+    }
+
+    // 5. Direccionamiento automático del foco hacia el primer campo erróneo
+    if (primerCampoInvalido) {
+      primerCampoInvalido.focus();
       return;
     }
 
-    // 2. Validación básica de formato de correo electrónico
-    if (!inputCorreo.includes("@") || !inputCorreo.includes(".")) {
-      cajaMensaje.style.display = "block";
-      cajaMensaje.style.backgroundColor = "rgba(245, 158, 11, 0.15)";
-      cajaMensaje.style.border = "1px solid var(--accent-gold)";
-      cajaMensaje.style.color = "#ffffff";
-      cajaMensaje.textContent = "⚠️ Por favor, ingrese un correo electrónico válido.";
-      return;
-    }
-
-    // 3. Despliegue de mensaje de éxito dinámico en el DOM
+    // Despliegue de mensaje de éxito en el DOM
     cajaMensaje.style.display = "block";
     cajaMensaje.style.backgroundColor = "rgba(16, 185, 129, 0.15)";
     cajaMensaje.style.border = "1px solid var(--accent-green)";
     cajaMensaje.style.color = "#ffffff";
-    cajaMensaje.textContent = `✅ ¡Mensaje enviado con éxito, ${inputNombre}! Nos comunicaremos a ${inputCorreo} a la brevedad.`;
+    cajaMensaje.textContent = `✅ ¡Mensaje enviado con éxito, ${inputNombre.value.trim()}! Te responderemos a ${inputEmail.value.trim()} a la brevedad.`;
 
-    // 4. Restablecer los campos del formulario
     formContacto.reset();
 
-    // 5. Ocultar mensaje tras 6 segundos
+    // Restablecer estilos de bordes
+    [inputNombre, inputEmail, selectMotivo, inputMensaje].forEach((el) => {
+      el.style.borderColor = "";
+    });
+
     setTimeout(() => {
       cajaMensaje.style.display = "none";
     }, 6000);
@@ -325,12 +429,11 @@ function configurarEventoSubmitFormulario() {
 }
 
 // ==============================================================================
-// PASO 7: TEMPORIZADORES ASINCRÓNICOS (setTimeout Y reestablecerColores)
+// 6. TEMPORIZADORES ASINCRÓNICOS
 // ==============================================================================
 
 /**
  * Restablece los estilos aplicados dinámicamente eliminando propiedades en línea.
- * Vuelve al diseño establecido originalmente en la hoja de estilos CSS.
  */
 function reestablecerColores() {
   const enlacesMenu = document.querySelectorAll(".nav-link");
@@ -341,23 +444,22 @@ function reestablecerColores() {
 }
 
 // ==============================================================================
-// PUNTO DE ENTRADA SEGURO (DOMContentLoaded)
+// 7. PUNTO DE ENTRADA SEGURO (DOMContentLoaded)
 // ==============================================================================
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("El DOM está listo para ser manipulado con total seguridad.");
 
-  // PASO 7: Demostración de temporizador vista en clase
-  // Resalta los enlaces del menú con color cyan neón al cargar y los restaura tras 3 segundos (3000 ms)
+  // Resalta los enlaces del menú temporalmente y los restaura tras 3 segundos
   const enlacesMenu = document.querySelectorAll(".nav-link");
   enlacesMenu.forEach((el) => {
-    el.style.setProperty("color", "#00f0ff", "important"); // Cyan neón gamer
+    el.style.setProperty("color", "#00f0ff", "important");
   });
   setTimeout(reestablecerColores, 3000);
 
-  // Inicialización de funciones y eventos de la aplicación
+  // Inicialización de módulos
   cargarProductos();
   configurarEventoOfertas();
   configurarEventosMouseMenu();
   configurarEventoSubmitFormulario();
 });
-
