@@ -27,7 +27,7 @@ const PRODUCTOS_DEFAULT = [
     badgeColor: "primary",
     descripcion: "Una épica aventura a través de la tierra y los cielos de Hyrule. Crea tus propias armas y vehículos.",
     imagen: {
-      src: "img/zelda-totk.jpg",
+      src: "assets/img/zelda-totk.jpg",
       alt: "Portada oficial del videojuego The Legend of Zelda: Tears of the Kingdom"
     }
   },
@@ -42,7 +42,7 @@ const PRODUCTOS_DEFAULT = [
     badgeColor: "danger",
     descripcion: "Sumérgete en el oscuro distrito de Dogtown con una trepidante trama de espionaje y acción futurista.",
     imagen: {
-      src: "img/cyberpunk-2077.jpg",
+      src: "assets/img/cyberpunk-2077.jpg",
       alt: "Arte promocional de Cyberpunk 2077 Phantom Liberty"
     }
   },
@@ -57,7 +57,7 @@ const PRODUCTOS_DEFAULT = [
     badgeColor: "warning",
     descripcion: "Descubre la magia del Reino Flor con efectos sorpresa, transformaciones inéditas y diversión multijugador.",
     imagen: {
-      src: "img/mario-wonder.jpg",
+      src: "assets/img/mario-wonder.jpg",
       alt: "Carátula oficial de Super Mario Bros Wonder para Nintendo Switch"
     }
   },
@@ -72,7 +72,7 @@ const PRODUCTOS_DEFAULT = [
     badgeColor: "info",
     descripcion: "La experiencia futbolística más auténtica con tecnología HyperMotionV y más de 19.000 futbolistas licenciados.",
     imagen: {
-      src: "img/fc24.jpg",
+      src: "assets/img/fc24.jpg",
       alt: "Portada deportiva de EA Sports FC 24"
     }
   },
@@ -87,7 +87,7 @@ const PRODUCTOS_DEFAULT = [
     badgeColor: "primary",
     descripcion: "Continúa el viaje fuera de Midgar en un vasto mundo repleto de historias cautivadoras y combate dinámico.",
     imagen: {
-      src: "img/ffvii-rebirth.jpg",
+      src: "assets/img/ffvii-rebirth.jpg",
       alt: "Portada épica de Final Fantasy VII Rebirth para PS5"
     }
   },
@@ -102,7 +102,7 @@ const PRODUCTOS_DEFAULT = [
     badgeColor: "dark",
     descripcion: "Sobrevive a la pesadilla en un apartado pueblo europeo con jugabilidad modernizada y gráficos de última generación.",
     imagen: {
-      src: "img/resident-evil-4.jpg",
+      src: "assets/img/resident-evil-4.jpg",
       alt: "Portada cinematográfica de Resident Evil 4 Remake"
     }
   }
