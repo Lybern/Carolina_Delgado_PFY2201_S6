@@ -210,9 +210,49 @@ function configurarEventoOfertas() {
   });
 }
 
+// ==============================================================================
+// PASO 4: GESTIÓN DE EVENTOS - MOUSEOVER Y MOUSEOUT (GUÍA DINÁMICA DE USUARIO)
+// ==============================================================================
+
+/**
+ * Configura los eventos 'mouseover' y 'mouseout' sobre los enlaces de navegación.
+ * Modifica el texto en #lead_info dinámicamente como guía interactiva para el usuario.
+ */
+function configurarEventosMouseMenu() {
+  const leadInfo = document.getElementById("lead_info");
+  if (!leadInfo) return;
+
+  const textoOriginal = "Explora nuestra selección especial de videojuegos recomendados con despacho prioritario en Chile.";
+
+  const enlacesGuia = [
+    { id: "menu_inicio", texto: "🎮 EriGamesStore: tu destino definitivo para títulos de PS5, Switch, Xbox y PC." },
+    { id: "menu_productos", texto: "📦 Catálogo Gamer: videojuegos 100% originales con despacho express a todo Chile." },
+    { id: "menu_categorias", texto: "⚔️ Explora por género: Aventura, RPG, Deportes, Plataformas y Survival Horror." },
+    { id: "menu_beneficios", texto: "🛡️ Compra segura: Garantía oficial, pago cifrado SSL y asesoría de expertos." },
+    { id: "menu_contacto", texto: "✉️ ¿Dudas o cotizaciones? Escríbenos y te responderemos en menos de 24 horas." }
+  ];
+
+  enlacesGuia.forEach(({ id, texto }) => {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      elemento.addEventListener("mouseover", () => {
+        leadInfo.textContent = texto;
+        leadInfo.style.color = "var(--accent-cyan)";
+        leadInfo.style.fontWeight = "600";
+      });
+      elemento.addEventListener("mouseout", () => {
+        leadInfo.textContent = textoOriginal;
+        leadInfo.style.color = "";
+        leadInfo.style.fontWeight = "";
+      });
+    }
+  });
+}
+
 // Punto de entrada seguro
 document.addEventListener("DOMContentLoaded", () => {
   cargarProductos();
   configurarEventoOfertas();
+  configurarEventosMouseMenu();
 });
 
