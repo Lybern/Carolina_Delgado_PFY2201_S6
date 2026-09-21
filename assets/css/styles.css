@@ -1239,38 +1239,57 @@ a[href^="mailto:"]:hover {
     gap: 0.4rem;
 }
 
-.form-group label {
+.form-group label,
+.contact-form .form-label {
     font-family: var(--font-heading);
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: #e2e8f0;
+    margin-bottom: 0.4rem;
+    display: inline-block;
 }
 
 .form-group input,
 .form-group select,
-.form-group textarea {
+.form-group textarea,
+.form-control,
+.form-select {
     width: 100%;
     padding: 0.75rem 1rem;
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    background-color: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: var(--radius-sm);
-    color: var(--text-primary);
+    color: #ffffff !important;
     font-family: var(--font-body);
-    font-size: 0.92rem;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    font-size: 0.95rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.form-control::placeholder,
+input::placeholder,
+textarea::placeholder {
+    color: #cbd5e1 !important;
+    opacity: 0.9 !important;
 }
 
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
-    background-color: #162038;
+.form-group textarea:focus,
+.form-control:focus,
+.form-select:focus {
+    color: #ffffff !important;
+    border-color: var(--accent-cyan) !important;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.35) !important;
+    background-color: #162238 !important;
+    outline: none;
 }
 
-.form-group select option {
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
+.form-group select option,
+.form-select option {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
 }
 
 .btn-submit {
@@ -2017,26 +2036,39 @@ footer.site-footer {
    21. VALIDACIÓN SEMÁNTICA DE BOOTSTRAP 5 Y TOASTS EN TEMA GAMER
    -------------------------------------------------------------------------- */
 .form-control.is-invalid,
-.form-select.is-invalid {
-    border-color: var(--accent-red) !important;
-    background-color: rgba(239, 68, 68, 0.08) !important;
-    box-shadow: 0 0 8px rgba(239, 68, 68, 0.3) !important;
+.form-select.is-invalid,
+.contact-form .form-control.is-invalid,
+.contact-form .form-select.is-invalid {
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.12) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4) !important;
+}
+
+.form-control.is-invalid::placeholder,
+.contact-form .form-control.is-invalid::placeholder {
+    color: #fca5a5 !important;
+    opacity: 0.85 !important;
 }
 
 .form-control.is-valid,
-.form-select.is-valid {
-    border-color: var(--accent-green) !important;
-    background-color: rgba(16, 185, 129, 0.08) !important;
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.3) !important;
+.form-select.is-valid,
+.contact-form .form-control.is-valid,
+.contact-form .form-select.is-valid {
+    border-color: #10b981 !important;
+    background-color: rgba(16, 185, 129, 0.12) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4) !important;
 }
 
 .invalid-feedback {
     display: none;
-    color: #f87171 !important;
-    font-size: 0.85rem;
+    color: #ff6b6b !important;
+    font-size: 0.88rem;
     font-weight: 600;
-    margin-top: 0.35rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    margin-top: 0.4rem;
+    line-height: 1.4;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .is-invalid ~ .invalid-feedback {
