@@ -184,7 +184,35 @@ function cargarProductos() {
     });
 }
 
+// ==============================================================================
+// PASO 3: GESTIÓN DE EVENTOS - EVENTO CLICK (OFERTAS ESPECIALES)
+// ==============================================================================
+
+/**
+ * Configura el evento 'click' para mostrar u ocultar la sección de ofertas especiales.
+ * Alterna la clase 'd-none' y actualiza el texto del botón dinámicamente.
+ */
+function configurarEventoOfertas() {
+  const botonOfertas = document.getElementById("boton_ofertas");
+  const seccionOfertas = document.getElementById("seccion_ofertas");
+
+  if (!botonOfertas || !seccionOfertas) return;
+
+  botonOfertas.addEventListener("click", () => {
+    // Alternar visibilidad con toggle
+    seccionOfertas.classList.toggle("d-none");
+    const estaOculta = seccionOfertas.classList.contains("d-none");
+
+    // Feedback dinámico en el texto del botón
+    botonOfertas.textContent = estaOculta
+      ? "🔥 Ver Ofertas Especiales"
+      : "❌ Ocultar Ofertas";
+  });
+}
+
 // Punto de entrada seguro
 document.addEventListener("DOMContentLoaded", () => {
   cargarProductos();
+  configurarEventoOfertas();
 });
+
