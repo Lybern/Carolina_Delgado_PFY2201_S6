@@ -146,8 +146,22 @@ function mostrarToast(mensaje, tipo = "info") {
     info: "rgba(37, 99, 235, 0.95)"
   };
 
-  toastEl.style.backgroundColor = colores[tipo] || colores.info;
-  toastEl.style.border = "1px solid rgba(255, 255, 255, 0.2)";
+  const bordes = {
+    success: "1px solid #10b981",
+    warning: "1px solid #f59e0b",
+    danger: "1px solid #ef4444",
+    info: "1px solid #00f0ff"
+  };
+
+  const brillos = {
+    success: "0 0 15px rgba(16, 185, 129, 0.4)",
+    warning: "0 0 15px rgba(245, 158, 11, 0.45)",
+    danger: "0 0 15px rgba(239, 68, 68, 0.45)",
+    info: "0 0 15px rgba(0, 240, 255, 0.4)"
+  };
+
+  toastEl.style.setProperty("border", bordes[tipo] || bordes.info, "important");
+  toastEl.style.setProperty("box-shadow", brillos[tipo] || brillos.info, "important");
   mensajeEl.textContent = mensaje;
 
   if (typeof bootstrap !== "undefined" && bootstrap.Toast) {
@@ -375,7 +389,7 @@ async function cargarProductos() {
     console.warn("Fallo en Fetch API al obtener data/productos.json. Activando catálogo de respaldo:", error);
 
     // Gestión básica de errores requerida: Mensaje amigable en caso de que los datos no se carguen correctamente
-    mostrarToast("No fue posible conectar con el servidor de datos. Mostrando catálogo local.", "warning");
+    mostrarToast("⚠️ No fue posible conectar con el servidor de datos. Mostrando catálogo de respaldo local.", "warning");
 
     productosCatalogo = [...PRODUCTOS_DEFAULT];
     mostrarProductos(productosCatalogo);
